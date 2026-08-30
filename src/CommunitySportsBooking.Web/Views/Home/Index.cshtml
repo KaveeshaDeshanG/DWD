@@ -1,0 +1,42 @@
+﻿@model HomeIndexViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="mb-4">
+    <h1 class="display-5">Community Sports Facilities Booking System</h1>
+    <p class="lead">@Model.CouncilIntroduction</p>
+    <p>@Model.ProgramsDescription</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2 class="h4">Facilities</h2>
+        <p>
+            We currently have <strong>@Model.ActiveFacilityCount</strong> active facilities available to book.
+            @if (Model.FeaturedFacilityNames.Any())
+            {
+                <text>Featured facilities: @string.Join(", ", Model.FeaturedFacilityNames).</text>
+            }
+        </p>
+        <a class="btn btn-primary" href="/Facility">Browse Facilities</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2 class="h5">Reviews</h2>
+        <p>See what members are saying about our facilities.</p>
+        <a href="/Review">View Reviews</a>
+    </div>
+    <div class="col-md-4">
+        <h2 class="h5">Become a Member</h2>
+        <p>Register to search facilities, make bookings, and leave reviews.</p>
+        <a href="/Account/Register">Register</a>
+    </div>
+    <div class="col-md-4">
+        <h2 class="h5">Get in Touch</h2>
+        <p>Have a question? Send us an inquiry.</p>
+        <a href="/Inquiry">Send an Inquiry</a>
+    </div>
+</div>

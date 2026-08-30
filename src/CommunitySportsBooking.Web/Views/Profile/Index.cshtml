@@ -1,0 +1,73 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h1>My Profile</h1>
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <h2 class="h4">Personal Information</h2>
+        <form asp-controller="Profile" asp-action="Edit" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" class="form-control" value="@Model.Email" disabled readonly />
+                <div class="form-text">Email cannot be changed.</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Phone" class="form-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="AddressLine" class="form-label"></label>
+                <input asp-for="AddressLine" class="form-control" />
+                <span asp-validation-for="AddressLine" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2 class="h4">Preferred Sports</h2>
+        <form asp-controller="Profile" asp-action="Sports" method="post">
+            @foreach (var sport in Model.AvailableSports)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="SelectedSportIds" value="@sport.SportId" id="pref-sport-@sport.SportId" checked="@sport.IsSelected" />
+                    <label class="form-check-label" for="pref-sport-@sport.SportId">@sport.SportName</label>
+                </div>
+            }
+            <button type="submit" class="btn btn-secondary mt-2">Update Preferences</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

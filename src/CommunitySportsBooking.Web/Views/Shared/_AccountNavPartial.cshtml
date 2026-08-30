@@ -1,0 +1,27 @@
+@* User Story 4: navigation branches on authentication state (SPEC-002 authorization matrix). *@
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <li class="nav-item">
+        <span class="nav-link text-dark">Hello, @User.Identity!.Name</span>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" href="/Profile">My Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" href="/Booking/MyBookings">My Bookings</a>
+    </li>
+    <li class="nav-item">
+        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+            <button type="submit" class="btn btn-link nav-link text-dark p-0 border-0">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" href="/Account/Login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" href="/Account/Register">Register</a>
+    </li>
+}
