@@ -1,0 +1,72 @@
+@model FacilitySearchViewModel
+@{
+    ViewData["Title"] = "Search Facilities";
+}
+
+<h1>Search Facilities</h1>
+<p class="text-muted">Search by type or location. @(Model.IsMemberSearch ? "Add a date and time to see real availability." : "")</p>
+
+<form asp-controller="Facility" asp-action="Search" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <label asp-for="FacilityType" class="form-label"></label>
+            <input asp-for="FacilityType" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Location" class="form-label"></label>
+            <input asp-for="Location" class="form-control" />
+        </div>
+        @if (Model.IsMemberSearch)
+        {
+            <div class="col-md-2">
+                <label asp-for="BookingDate" class="form-label"></label>
+                <input asp-for="BookingDate" type="date" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="StartTime" class="form-label"></label>
+                <input asp-for="StartTime" type="time" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="EndTime" class="form-label"></label>
+                <input asp-for="EndTime" type="time" class="form-control" />
+            </div>
+        }
+    </div>
+
+    @if (!Model.IsMemberSearch)
+    {
+        <p class="small text-muted">
+            Searching as a guest shows facility type and location only.
+            <a href="/Account/Login?ReturnUrl=%2FFacility%2FSearch">Sign in</a> or
+            <a href="/Account/Register">register</a> to search a specific date and time and see real-time availability.
+        </p>
+    }
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+@if (Model.HasSearched)
+{
+    <hr />
+    @if (!Model.Results.Any())
+    {
+        <div class="empty-state">
+            <p>No facilities matched your search.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row mt-3">
+            @foreach (var facility in Model.Results)
+            {
+                @await Html.PartialAsync("_FacilityCardPartial", facility)
+            }
+        </div>
+    }
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,25 @@
+@model List<FacilitySummaryViewModel>
+@{
+    ViewData["Title"] = "Facilities";
+}
+
+<h1>Facilities</h1>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <p><a class="btn btn-primary" href="/Facility/Search">Search with availability</a></p>
+}
+
+@if (!Model.Any())
+{
+    <p>No facilities are currently available.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var facility in Model)
+        {
+            @await Html.PartialAsync("_FacilityCardPartial", facility)
+        }
+    </div>
+}

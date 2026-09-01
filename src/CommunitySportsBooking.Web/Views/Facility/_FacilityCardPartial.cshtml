@@ -1,0 +1,30 @@
+@model FacilitySummaryViewModel
+
+<div class="col-md-4 mb-3">
+    <div class="card card-facility">
+        <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" class="card-img-top" alt="" />
+        <div class="card-body">
+            <h5 class="card-title mb-0">@Model.FacilityName</h5>
+            <h6 class="card-subtitle text-muted">@Model.FacilityType</h6>
+            <p class="card-text mb-0">@Model.Location, @Model.City</p>
+            @if (Model.IsAvailableForRequestedWindow.HasValue)
+            {
+                @if (Model.IsAvailableForRequestedWindow.Value)
+                {
+                    <span class="badge badge-available">Available</span>
+                }
+                else
+                {
+                    <span class="badge badge-unavailable">Not available for requested time</span>
+                }
+            }
+            <div class="d-flex gap-2 mt-2">
+                <a href="/Facility/@Model.FacilityId" class="btn btn-outline-primary btn-sm">View Details</a>
+                @if (Model.IsAvailableForRequestedWindow == true)
+                {
+                    <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary btn-sm">Book</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

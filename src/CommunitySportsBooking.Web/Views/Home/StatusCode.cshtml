@@ -1,0 +1,17 @@
+@model int
+@{
+    var (title, message) = Model switch
+    {
+        404 => ("Page not found", "The page you're looking for doesn't exist or may have been moved."),
+        403 => ("Access denied", "You don't have permission to view that page."),
+        _ => ("Something went wrong", "We couldn't complete that request.")
+    };
+    ViewData["Title"] = title;
+}
+
+<div class="empty-state my-5">
+    <h1 class="h2">@title</h1>
+    <p>@message</p>
+    <a href="/" class="btn btn-primary">Return home</a>
+    <a href="/Facility" class="btn btn-outline-primary">Browse Facilities</a>
+</div>

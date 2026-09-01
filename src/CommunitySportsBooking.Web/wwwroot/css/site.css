@@ -1,3 +1,209 @@
+/* ---------------------------------------------------------------------------
+   Design system — tokens. Layered on top of Bootstrap 5 (not a replacement):
+   Bootstrap's grid/utilities/components stay authoritative, these tokens
+   just give the app one consistent palette/spacing/radius/shadow scale
+   instead of per-page defaults.
+   --------------------------------------------------------------------------- */
+:root {
+  --brand-primary: #1d4ed8;
+  --brand-primary-dark: #1e3a8a;
+  --brand-secondary: #0d9488;
+  --brand-success: #16a34a;
+  --brand-warning: #d97706;
+  --brand-danger: #dc2626;
+  --brand-surface: #f8fafc;
+  --brand-surface-alt: #f1f5f9;
+  --brand-border: #e2e8f0;
+  --brand-text: #1e293b;
+  --brand-text-muted: #64748b;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.10);
+}
+
+body {
+  color: var(--brand-text);
+  background-color: var(--brand-surface);
+}
+
+a {
+  color: var(--brand-primary);
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary-dark);
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--brand-primary-dark);
+  border-color: var(--brand-primary-dark);
+}
+.btn-outline-primary {
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+.btn-secondary {
+  background-color: var(--brand-secondary);
+  border-color: #0b7a70;
+}
+
+/* Facility / content cards */
+.card-facility {
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  height: 100%;
+}
+.card-facility:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.card-facility .card-img-top {
+  height: 160px;
+  object-fit: cover;
+  background-color: var(--brand-surface-alt);
+}
+.card-facility .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  color: #fff;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-5);
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+}
+.hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.hero .hero-content {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-5) var(--space-4);
+}
+.hero .hero-content p.lead {
+  color: #f1f5f9;
+  max-width: 42rem;
+}
+
+/* Sport tiles (Home "Popular Sports", filter shortcuts) */
+.sport-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
+  background-color: #fff;
+  text-decoration: none;
+  color: var(--brand-text);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  height: 100%;
+}
+.sport-tile:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+  color: var(--brand-primary);
+}
+.sport-tile img {
+  width: 56px;
+  height: 56px;
+}
+.sport-tile span {
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Availability / status indicators — never color-only: always paired with text */
+.badge-available {
+  background-color: var(--brand-success);
+  color: #fff;
+}
+.badge-unavailable {
+  background-color: var(--brand-text-muted);
+  color: #fff;
+}
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.slot-available {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+.slot-selected {
+  background-color: var(--brand-primary);
+  color: #fff;
+  border-color: var(--brand-primary-dark);
+}
+.slot-unavailable {
+  background-color: var(--brand-surface-alt);
+  color: var(--brand-text-muted);
+  border-color: var(--brand-border);
+  text-decoration: line-through;
+}
+
+/* Flash alerts (TempData success/error) */
+.alert-flash {
+  border-radius: var(--radius-md);
+  margin-top: var(--space-3);
+}
+
+/* Generic section rhythm */
+.page-section {
+  margin-bottom: var(--space-5);
+}
+.page-section h2 {
+  margin-bottom: var(--space-3);
+}
+
+/* Empty states */
+.empty-state {
+  text-align: center;
+  padding: var(--space-5) var(--space-3);
+  border: 1px dashed var(--brand-border);
+  border-radius: var(--radius-md);
+  background-color: #fff;
+}
+.empty-state p {
+  color: var(--brand-text-muted);
+  margin-bottom: var(--space-3);
+}
+
 html {
   font-size: 14px;
 }

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#skyGrad)"/>
+  <circle cx="1040" cy="90" r="60" fill="#f8fafc" opacity="0.12"/>
+  <circle cx="120" cy="60" r="34" fill="#f8fafc" opacity="0.1"/>
+  <rect y="280" width="1200" height="120" fill="#16a34a"/>
+  <ellipse cx="600" cy="280" rx="420" ry="60" fill="none" stroke="#f8fafc" stroke-width="3" opacity="0.5"/>
+  <line x1="600" y1="220" x2="600" y2="400" stroke="#f8fafc" stroke-width="3" opacity="0.5"/>
+  <circle cx="600" cy="280" r="46" fill="none" stroke="#f8fafc" stroke-width="3" opacity="0.5"/>
+  <g transform="translate(870 250)">
+    <circle r="22" fill="#f8fafc"/>
+    <polygon points="0,-14 8,-5 5,9 -5,9 -8,-5" fill="#1e293b"/>
+  </g>
+  <g transform="translate(300 320)">
+    <circle r="20" fill="#f59e0b"/>
+    <path d="M -20 0 H 20 M -14 -14 Q 0 0 -14 14 M 14 -14 Q 0 0 14 14" stroke="#1e293b" stroke-width="1.5" fill="none"/>
+  </g>
+</svg>

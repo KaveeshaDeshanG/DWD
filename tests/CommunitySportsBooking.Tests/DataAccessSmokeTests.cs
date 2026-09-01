@@ -9,6 +9,7 @@ namespace CommunitySportsBooking.Tests;
 // CommunitySportsBookingDB correctly (spec.md User Story 2). Runs against the real
 // database on purpose, not an in-memory provider — the point is proving the mapping
 // matches the physical schema exactly.
+[Collection("Database collection")]
 public class DataAccessSmokeTests
 {
     private const string ConnectionString =
@@ -27,12 +28,18 @@ public class DataAccessSmokeTests
     {
         await using var context = CreateContext();
 
-        Assert.Equal(5, await context.Members.CountAsync());
+        // Member/Booking use >= rather than an exact match: this database has
+        // been actually used through the running app (not just seeded) since
+        // Phase 4, so real rows beyond the original seed data are expected
+        // and legitimate — not something a test should delete or treat as
+        // drift. The other six tables haven't been touched by real usage yet,
+        // so an exact match still holds and is the stronger assertion.
+        Assert.True(await context.Members.CountAsync() >= 5);
         Assert.Equal(6, await context.Sports.CountAsync());
         Assert.Equal(8, await context.MemberSports.CountAsync());
         Assert.Equal(6, await context.Facilities.CountAsync());
         Assert.Equal(7, await context.FacilitySports.CountAsync());
-        Assert.Equal(6, await context.Bookings.CountAsync());
+        Assert.True(await context.Bookings.CountAsync() >= 6);
         Assert.Equal(2, await context.Reviews.CountAsync());
         Assert.Equal(3, await context.Inquiries.CountAsync());
     }

@@ -1,42 +1,133 @@
-﻿@model HomeIndexViewModel
+@model HomeIndexViewModel
 @{
     ViewData["Title"] = "Home";
 }
 
-<div class="mb-4">
-    <h1 class="display-5">Community Sports Facilities Booking System</h1>
-    <p class="lead">@Model.CouncilIntroduction</p>
-    <p>@Model.ProgramsDescription</p>
-</div>
+<section class="hero">
+    <img src="~/images/hero.svg" alt="" class="hero-bg" />
+    <div class="hero-content">
+        <h1 class="display-5 fw-bold">Find and book sports facilities easily.</h1>
+        <p class="lead">@Model.CouncilIntroduction</p>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-light btn-lg" href="/Facility">Find Facilities</a>
+            <a class="btn btn-outline-light btn-lg" href="/Facility/Search">Browse with Availability</a>
+        </div>
+    </div>
+</section>
 
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h2 class="h4">Facilities</h2>
-        <p>
-            We currently have <strong>@Model.ActiveFacilityCount</strong> active facilities available to book.
-            @if (Model.FeaturedFacilityNames.Any())
+<section class="page-section">
+    <h2 class="h3">Popular Sports</h2>
+    <div class="row g-3">
+        @foreach (var sport in Model.PopularSports)
+        {
+            var icon = ImageResolver.GetSportIconPath(sport.SportName);
+            <div class="col-6 col-md-4 col-lg-2">
+                <a class="sport-tile" href="/Facility/Search?facilityType=@Uri.EscapeDataString(sport.SportName)">
+                    @if (icon is not null)
+                    {
+                        <img src="@icon" alt="@sport.SportName" />
+                    }
+                    <span>@sport.SportName</span>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="page-section">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h3 mb-0">Featured Facilities</h2>
+        <a href="/Facility" class="link-primary">View all facilities &rarr;</a>
+    </div>
+    <p class="text-muted">@Model.ActiveFacilityCount active facilities currently available to book.</p>
+    @if (!Model.FeaturedFacilities.Any())
+    {
+        <div class="empty-state">
+            <p>No facilities are currently available.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var facility in Model.FeaturedFacilities)
             {
-                <text>Featured facilities: @string.Join(", ", Model.FeaturedFacilityNames).</text>
+                @await Html.PartialAsync("~/Views/Facility/_FacilityCardPartial.cshtml", facility)
             }
-        </p>
-        <a class="btn btn-primary" href="/Facility">Browse Facilities</a>
-    </div>
-</div>
+        </div>
+    }
+</section>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2 class="h5">Reviews</h2>
-        <p>See what members are saying about our facilities.</p>
-        <a href="/Review">View Reviews</a>
+<section class="page-section">
+    <h2 class="h3">How It Works</h2>
+    <div class="row g-3 text-center">
+        <div class="col-md-3">
+            <div class="p-3">
+                <div class="h4 text-primary">1</div>
+                <h3 class="h6">Search</h3>
+                <p class="small text-muted">Browse or search facilities by sport and location.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3">
+                <div class="h4 text-primary">2</div>
+                <h3 class="h6">Choose a facility</h3>
+                <p class="small text-muted">View details, sports supported, and reviews from other members.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3">
+                <div class="h4 text-primary">3</div>
+                <h3 class="h6">Select a time</h3>
+                <p class="small text-muted">Check real-time availability for the date and time you want.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3">
+                <div class="h4 text-primary">4</div>
+                <h3 class="h6">Confirm</h3>
+                <p class="small text-muted">Confirm your booking instantly — no waiting for approval.</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2 class="h5">Become a Member</h2>
-        <p>Register to search facilities, make bookings, and leave reviews.</p>
-        <a href="/Account/Register">Register</a>
+</section>
+
+<section class="page-section">
+    <h2 class="h3">Why Book With Us</h2>
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="p-3 h-100 border rounded-3 bg-white">
+                <h3 class="h6">Easy booking</h3>
+                <p class="small text-muted mb-0">A simple, guided flow from search to confirmation.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 h-100 border rounded-3 bg-white">
+                <h3 class="h6">Real-time availability</h3>
+                <p class="small text-muted mb-0">See exactly which time slots are free before you book.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 h-100 border rounded-3 bg-white">
+                <h3 class="h6">Multiple sports</h3>
+                <p class="small text-muted mb-0">@Model.PopularSports.Count sports across our facility network.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 h-100 border rounded-3 bg-white">
+                <h3 class="h6">Secure member accounts</h3>
+                <p class="small text-muted mb-0">Your bookings and profile are private to you.</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2 class="h5">Get in Touch</h2>
-        <p>Have a question? Send us an inquiry.</p>
-        <a href="/Inquiry">Send an Inquiry</a>
-    </div>
-</div>
+</section>
+
+@if (User.Identity?.IsAuthenticated != true)
+{
+    <section class="page-section">
+        <div class="p-4 rounded-3 bg-white border text-center">
+            <h2 class="h5">Become a Member</h2>
+            <p class="text-muted mb-3">Register to search facilities by date and time, and make bookings.</p>
+            <a href="/Account/Register" class="btn btn-primary">Register</a>
+        </div>
+    </section>
+}

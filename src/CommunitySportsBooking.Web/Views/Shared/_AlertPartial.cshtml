@@ -1,0 +1,17 @@
+@* Single reusable success/error flash mechanism, driven by TempData. Included
+   once in _Layout.cshtml so every controller (Booking, Profile, Review,
+   Inquiry) can show feedback the same way, instead of bespoke per-page markup. *@
+@if (TempData["SuccessMessage"] is string success && !string.IsNullOrWhiteSpace(success))
+{
+    <div class="alert alert-success alert-flash alert-dismissible fade show" role="alert">
+        @success
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] is string error && !string.IsNullOrWhiteSpace(error))
+{
+    <div class="alert alert-danger alert-flash alert-dismissible fade show" role="alert">
+        @error
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

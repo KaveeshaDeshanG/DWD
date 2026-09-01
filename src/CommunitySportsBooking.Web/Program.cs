@@ -63,6 +63,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Branded 404/403/etc. pages (HomeController.StatusCode) instead of a bare
+// status response — additive middleware only, no change to auth/routing/DB
+// startup behavior above.
+app.UseStatusCodePagesWithReExecute("/Home/StatusCode/{0}");
+
 app.UseRouting();
 
 app.UseAuthentication();

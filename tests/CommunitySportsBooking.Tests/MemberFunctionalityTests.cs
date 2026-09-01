@@ -18,6 +18,7 @@ namespace CommunitySportsBooking.Tests;
 // cookies, generic failure wording) are proven separately by the real
 // HTTP verification tasks in tasks.md (T011/T019/T025/T026), matching how
 // Phase 5 split its own verification between xUnit and real HTTP calls.
+[Collection("Database collection")]
 public class MemberFunctionalityTests
 {
     private const string ConnectionString =

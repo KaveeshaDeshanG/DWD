@@ -9,16 +9,16 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CommunitySportsBooking.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Community Sports Facilities Booking System</a>
+                <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Community Sports Booking</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -26,30 +26,35 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Facility">Facilities</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Review">Reviews</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Inquiry">Inquiry</a>
-                        </li>
                     </ul>
                     <ul class="navbar-nav">
-                        @* Guest/Member-specific navigation is inserted here by User Story 4 (see spec.md/tasks.md) — this shell renders only the links common to every visitor. *@
+                        @* Guest/Member-specific navigation — see _AccountNavPartial.cshtml (SPEC-002 authorization matrix). *@
                         @await Html.PartialAsync("_AccountNavPartial")
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container flex-grow-1">
         <main role="main" class="pb-3">
+            @await Html.PartialAsync("_AlertPartial")
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - Community Sports Facilities Booking System
+            <div class="row gy-3">
+                <div class="col-md-6">
+                    <strong class="text-dark">Community Sports Facilities Booking System</strong>
+                    <p class="mb-0 small">Find and book local sports facilities easily.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="/" class="link-secondary me-3">Home</a>
+                    <a href="/Facility" class="link-secondary">Facilities</a>
+                    <p class="mb-0 small mt-2">&copy; 2026 Community Sports Facilities Booking System</p>
+                </div>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

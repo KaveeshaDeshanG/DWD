@@ -10,5 +10,8 @@ public class HomeIndexViewModel
 
     public int ActiveFacilityCount { get; set; }
 
-    public List<string> FeaturedFacilityNames { get; set; } = new();
+    // Real, current top-3 active facilities (by name) — not fabricated data.
+    public List<FacilitySummaryViewModel> FeaturedFacilities { get; set; } = new();
+
+    public List<SportOptionViewModel> PopularSports { get; set; } = new();
 }
