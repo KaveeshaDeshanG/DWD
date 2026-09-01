@@ -3,43 +3,53 @@
     ViewData["Title"] = Model.FacilityName;
 }
 
-<h1>@Model.FacilityName</h1>
-<h5 class="text-muted">@Model.FacilityType</h5>
+<div class="page-section">
+    <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" alt="" class="w-100 rounded-3 mb-3" style="max-height:280px;object-fit:cover;" />
 
-<dl class="row mt-3">
-    <dt class="col-sm-3">Address</dt>
-    <dd class="col-sm-9">@Model.AddressLine, @Model.City</dd>
+    <h1 class="h3 mb-0">@Model.FacilityName</h1>
+    <h2 class="h6 text-muted mb-3">@Model.FacilityType</h2>
 
-    <dt class="col-sm-3">Location</dt>
-    <dd class="col-sm-9">@Model.Location</dd>
+    <div class="form-card mb-3">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Address</dt>
+            <dd class="col-sm-9">@Model.AddressLine, @Model.City</dd>
 
-    @if (Model.Capacity.HasValue)
+            <dt class="col-sm-3">Location</dt>
+            <dd class="col-sm-9">@Model.Location</dd>
+
+            @if (Model.Capacity.HasValue)
+            {
+                <dt class="col-sm-3">Capacity</dt>
+                <dd class="col-sm-9">@Model.Capacity</dd>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+            }
+
+            <dt class="col-sm-3">Sports Supported</dt>
+            <dd class="col-sm-9 mb-0">
+                @if (Model.SupportedSports.Any())
+                {
+                    @string.Join(", ", Model.SupportedSports)
+                }
+                else
+                {
+                    <text>None listed</text>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <a href="/Facility" class="btn btn-outline-secondary">Back to Facilities</a>
+    @if (User.Identity?.IsAuthenticated == true)
     {
-        <dt class="col-sm-3">Capacity</dt>
-        <dd class="col-sm-9">@Model.Capacity</dd>
+        <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary">Book This Facility</a>
     }
-
-    @if (!string.IsNullOrEmpty(Model.Description))
+    else
     {
-        <dt class="col-sm-3">Description</dt>
-        <dd class="col-sm-9">@Model.Description</dd>
+        <a href="/Account/Login?ReturnUrl=%2FBooking%2FCreate%3FfacilityId%3D@Model.FacilityId" class="btn btn-primary">Sign in to Book</a>
     }
-
-    <dt class="col-sm-3">Sports Supported</dt>
-    <dd class="col-sm-9">
-        @if (Model.SupportedSports.Any())
-        {
-            @string.Join(", ", Model.SupportedSports)
-        }
-        else
-        {
-            <text>None listed</text>
-        }
-    </dd>
-</dl>
-
-<a href="/Facility" class="btn btn-secondary">Back to Facilities</a>
-@if (User.Identity?.IsAuthenticated == true)
-{
-    <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary">Book This Facility</a>
-}
+</div>

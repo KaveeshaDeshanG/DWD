@@ -191,6 +191,17 @@ a {
   margin-bottom: var(--space-3);
 }
 
+/* Form-centric pages (Login, Register, Profile, Booking) — same card
+   language as .card-facility, so auth/form screens don't read as a bare
+   scaffold next to the polished browsing/booking pages. */
+.form-card {
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  background-color: #fff;
+  padding: var(--space-4);
+}
+
 /* Empty states */
 .empty-state {
   text-align: center;

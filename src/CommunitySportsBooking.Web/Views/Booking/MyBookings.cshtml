@@ -3,60 +3,70 @@
     ViewData["Title"] = "My Bookings";
 }
 
-<h1>My Bookings</h1>
+<div class="page-section">
+    <h1 class="h3 mb-4">My Bookings</h1>
 
-<h2 class="h4 mt-4">Upcoming</h2>
-@if (!Model.UpcomingBookings.Any())
-{
-    <p>You have no upcoming bookings.</p>
-}
-else
-{
-    <table class="table">
-        <thead><tr><th>Facility</th><th>Type</th><th>Date</th><th>Time</th></tr></thead>
-        <tbody>
-            @foreach (var b in Model.UpcomingBookings)
-            {
-                <tr>
-                    <td>@b.FacilityName</td>
-                    <td>@b.FacilityType</td>
-                    <td>@b.BookingDate.ToString("yyyy-MM-dd")</td>
-                    <td>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    <h2 class="h5">Upcoming</h2>
+    @if (!Model.UpcomingBookings.Any())
+    {
+        <div class="empty-state mb-4">
+            <p class="mb-0">You have no upcoming bookings. <a href="/Facility/Search">Search for a facility</a> to book one.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mb-4">
+            <table class="table table-hover align-middle bg-white">
+                <thead><tr><th>Facility</th><th>Type</th><th>Date</th><th>Time</th></tr></thead>
+                <tbody>
+                    @foreach (var b in Model.UpcomingBookings)
+                    {
+                        <tr>
+                            <td>@b.FacilityName</td>
+                            <td>@b.FacilityType</td>
+                            <td>@b.BookingDate.ToString("yyyy-MM-dd")</td>
+                            <td>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
-<h2 class="h4 mt-4">Completed</h2>
-@if (!Model.CompletedBookings.Any())
-{
-    <p>You have no completed bookings yet.</p>
-}
-else
-{
-    <table class="table">
-        <thead><tr><th>Facility</th><th>Type</th><th>Date</th><th>Time</th><th>Review</th></tr></thead>
-        <tbody>
-            @foreach (var b in Model.CompletedBookings)
-            {
-                <tr>
-                    <td>@b.FacilityName</td>
-                    <td>@b.FacilityType</td>
-                    <td>@b.BookingDate.ToString("yyyy-MM-dd")</td>
-                    <td>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</td>
-                    <td>
-                        @if (b.HasReview)
-                        {
-                            <span class="text-muted">Reviewed</span>
-                        }
-                        else
-                        {
-                            <a href="/Review/Create?bookingId=@b.BookingId">Leave a review</a>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    <h2 class="h5">Completed</h2>
+    @if (!Model.CompletedBookings.Any())
+    {
+        <div class="empty-state">
+            <p class="mb-0">You have no completed bookings yet.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle bg-white">
+                <thead><tr><th>Facility</th><th>Type</th><th>Date</th><th>Time</th><th>Review</th></tr></thead>
+                <tbody>
+                    @foreach (var b in Model.CompletedBookings)
+                    {
+                        <tr>
+                            <td>@b.FacilityName</td>
+                            <td>@b.FacilityType</td>
+                            <td>@b.BookingDate.ToString("yyyy-MM-dd")</td>
+                            <td>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</td>
+                            <td>
+                                @if (b.HasReview)
+                                {
+                                    <span class="text-muted">Reviewed</span>
+                                }
+                                else
+                                {
+                                    <a href="/Review/Create?bookingId=@b.BookingId">Leave a review</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
