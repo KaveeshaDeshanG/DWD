@@ -11,6 +11,7 @@ public class CreateBookingViewModel
     public int FacilityId { get; set; }
 
     public string FacilityName { get; set; } = string.Empty; // display only, populated by the GET action
+    public string FacilityType { get; set; } = string.Empty; // display only, drives the summary thumbnail
 
     [Required]
     [Display(Name = "Date")]

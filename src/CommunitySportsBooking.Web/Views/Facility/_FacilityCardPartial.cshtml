@@ -1,28 +1,47 @@
 @model FacilitySummaryViewModel
 
-<div class="col-md-4 mb-3">
+<div class="col-md-4 mb-4">
     <div class="card card-facility">
         <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" class="card-img-top" alt="" />
         <div class="card-body">
-            <h5 class="card-title mb-0">@Model.FacilityName</h5>
-            <h6 class="card-subtitle text-muted">@Model.FacilityType</h6>
-            <p class="card-text mb-0">@Model.Location, @Model.City</p>
-            @if (Model.IsAvailableForRequestedWindow.HasValue)
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <h5 class="card-title mb-0">@Model.FacilityName</h5>
+                @if (Model.IsAvailableForRequestedWindow.HasValue)
+                {
+                    @if (Model.IsAvailableForRequestedWindow.Value)
+                    {
+                        <span class="badge badge-available flex-shrink-0"><i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i>Available</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-unavailable flex-shrink-0">Unavailable</span>
+                    }
+                }
+            </div>
+            <h6 class="card-subtitle text-muted mb-1">
+                <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>@Model.Location, @Model.City
+            </h6>
+            <p class="card-text small text-muted mb-1">@Model.FacilityType</p>
+
+            @if (Model.SupportedSports.Any())
             {
-                @if (Model.IsAvailableForRequestedWindow.Value)
-                {
-                    <span class="badge badge-available">Available</span>
-                }
-                else
-                {
-                    <span class="badge badge-unavailable">Not available for requested time</span>
-                }
+                <div class="d-flex flex-wrap gap-1 mb-1">
+                    @foreach (var sport in Model.SupportedSports)
+                    {
+                        <span class="sport-tag">@sport</span>
+                    }
+                </div>
             }
-            <div class="d-flex gap-2 mt-2">
-                <a href="/Facility/@Model.FacilityId" class="btn btn-outline-primary btn-sm">View Details</a>
+
+            <div class="d-flex gap-2 mt-auto pt-2">
+                <a href="/Facility/@Model.FacilityId" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-info-circle me-1" aria-hidden="true"></i>Details
+                </a>
                 @if (Model.IsAvailableForRequestedWindow == true)
                 {
-                    <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary btn-sm">Book</a>
+                    <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary btn-sm">
+                        <i class="bi bi-calendar-plus me-1" aria-hidden="true"></i>Book
+                    </a>
                 }
             </div>
         </div>

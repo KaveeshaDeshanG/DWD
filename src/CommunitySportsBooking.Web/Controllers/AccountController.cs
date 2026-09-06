@@ -43,12 +43,23 @@ public class AccountController : Controller
             return View(model);
         }
 
+        // Task 3: tracked by the submitted email string itself, not by
+        // whether it belongs to a real Member — so a nonexistent email is
+        // throttled exactly the same way a real one is, and this check can
+        // never be used to fingerprint which emails are registered.
+        if (LoginAttemptTracker.IsLockedOut(model.Email))
+        {
+            ModelState.AddModelError(string.Empty, "Too many failed login attempts. Please try again in a few minutes.");
+            return View(model);
+        }
+
         var member = await _context.Members.SingleOrDefaultAsync(m => m.Email == model.Email);
 
         // Generic failure path — never reveals whether the email or the
         // password was wrong (SPEC-004 Exception Flow).
         if (member is null || !member.IsActive)
         {
+            LoginAttemptTracker.RecordFailure(model.Email);
             ModelState.AddModelError(string.Empty, "Invalid email or password.");
             return View(model);
         }
@@ -56,11 +67,13 @@ public class AccountController : Controller
         var verifyResult = _passwordHasher.VerifyHashedPassword(member, member.PasswordHash, model.Password);
         if (verifyResult == PasswordVerificationResult.Failed)
         {
+            LoginAttemptTracker.RecordFailure(model.Email);
             ModelState.AddModelError(string.Empty, "Invalid email or password.");
             return View(model);
         }
 
-        await SignInMemberAsync(member);
+        LoginAttemptTracker.RecordSuccess(model.Email);
+        await SignInMemberAsync(member, model.RememberMe);
 
         return LocalRedirect(model.ReturnUrl ?? "/");
     }
@@ -130,7 +143,7 @@ public class AccountController : Controller
         return LocalRedirect("/");
     }
 
-    private async Task SignInMemberAsync(Member member)
+    private async Task SignInMemberAsync(Member member, bool isPersistent = false)
     {
         var claims = new List<Claim>
         {
@@ -139,6 +152,7 @@ public class AccountController : Controller
             new(ClaimTypes.Email, member.Email)
         };
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+        var authProperties = new AuthenticationProperties { IsPersistent = isPersistent };
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
     }
 }

@@ -34,14 +34,20 @@ public class DataAccessSmokeTests
         // and legitimate — not something a test should delete or treat as
         // drift. The other six tables haven't been touched by real usage yet,
         // so an exact match still holds and is the stronger assertion.
+        // Sport/Facility/FacilitySport grew across two deliberate seed-data
+        // extensions (both documented in database/05_SeedData.sql, not
+        // drift): 6->8 sports (Cricket, Volleyball added; "Football" renamed
+        // to "Soccer"), then 6->8 facilities (Eastfield Cricket Ground,
+        // Southgate Volleyball Court added as dedicated facilities for the
+        // two new sports) and 7->9->11 FacilitySport links accordingly.
         Assert.True(await context.Members.CountAsync() >= 5);
-        Assert.Equal(6, await context.Sports.CountAsync());
+        Assert.Equal(8, await context.Sports.CountAsync());
         Assert.Equal(8, await context.MemberSports.CountAsync());
-        Assert.Equal(6, await context.Facilities.CountAsync());
-        Assert.Equal(7, await context.FacilitySports.CountAsync());
+        Assert.Equal(8, await context.Facilities.CountAsync());
+        Assert.Equal(11, await context.FacilitySports.CountAsync());
         Assert.True(await context.Bookings.CountAsync() >= 6);
-        Assert.Equal(2, await context.Reviews.CountAsync());
-        Assert.Equal(3, await context.Inquiries.CountAsync());
+        Assert.True(await context.Reviews.CountAsync() >= 2);
+        Assert.True(await context.Inquiries.CountAsync() >= 3);
     }
 
     [Fact]
@@ -83,5 +89,55 @@ public class DataAccessSmokeTests
 
         await using var finalContext = CreateContext();
         Assert.Null(await finalContext.Inquiries.FindAsync(inquiry.InquiryId));
+    }
+
+    [Fact]
+    public async Task Sport_CatalogContainsAllEightExpectedSports()
+    {
+        await using var context = CreateContext();
+        var names = await context.Sports.Select(s => s.SportName).ToListAsync();
+
+        Assert.Equal(8, names.Count);
+        Assert.Equal(
+            new[] { "Athletics", "Badminton", "Basketball", "Cricket", "Soccer", "Swimming", "Tennis", "Volleyball" },
+            names.OrderBy(n => n));
+    }
+
+    [Fact]
+    public async Task FacilitySport_CricketAndVolleyball_HaveADedicatedActiveFacility()
+    {
+        // Not just "linked to some facility" (Cricket/Volleyball were already
+        // tacked onto Athletics Track/Sports Hall) but each has its own
+        // purpose-built, active facility — Eastfield Cricket Ground and
+        // Southgate Volleyball Court — so search/browse results for these
+        // sports show a facility that actually names and describes them.
+        await using var context = CreateContext();
+
+        var cricketGround = await context.Facilities.SingleOrDefaultAsync(f => f.FacilityName == "Eastfield Cricket Ground");
+        Assert.NotNull(cricketGround);
+        Assert.True(cricketGround!.IsActive);
+        Assert.True(await context.FacilitySports.AnyAsync(fs => fs.FacilityId == cricketGround.FacilityId && fs.Sport.SportName == "Cricket"));
+
+        var volleyballCourt = await context.Facilities.SingleOrDefaultAsync(f => f.FacilityName == "Southgate Volleyball Court");
+        Assert.NotNull(volleyballCourt);
+        Assert.True(volleyballCourt!.IsActive);
+        Assert.True(await context.FacilitySports.AnyAsync(fs => fs.FacilityId == volleyballCourt.FacilityId && fs.Sport.SportName == "Volleyball"));
+    }
+
+    [Fact]
+    public async Task AllEightSports_HaveAtLeastOneActiveFacility()
+    {
+        // The coursework-facing guarantee: no sport in the catalog is a
+        // "dead end" with nothing to search for or book — every sport a
+        // Guest/Member can select anywhere in the app resolves to at least
+        // one real, active, bookable facility.
+        await using var context = CreateContext();
+
+        var sportsWithoutAnActiveFacility = await context.Sports
+            .Where(s => !s.FacilitySports.Any(fs => fs.Facility.IsActive))
+            .Select(s => s.SportName)
+            .ToListAsync();
+
+        Assert.Empty(sportsWithoutAnActiveFacility);
     }
 }

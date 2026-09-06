@@ -11,4 +11,5 @@ public class FacilityDetailViewModel
     public int? Capacity { get; set; }
     public string? Description { get; set; }
     public List<string> SupportedSports { get; set; } = new();
+    public FacilityReviewSummaryViewModel Reviews { get; set; } = new();
 }

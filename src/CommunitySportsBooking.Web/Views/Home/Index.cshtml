@@ -9,8 +9,8 @@
         <h1 class="display-5 fw-bold">Find and book sports facilities easily.</h1>
         <p class="lead">@Model.CouncilIntroduction</p>
         <div class="d-flex flex-wrap gap-2 mt-3">
-            <a class="btn btn-light btn-lg" href="/Facility">Find Facilities</a>
-            <a class="btn btn-outline-light btn-lg" href="/Facility/Search">Browse with Availability</a>
+            <a class="btn btn-light btn-lg" href="/Facility"><i class="bi bi-search me-1" aria-hidden="true"></i>Find Facilities</a>
+            <a class="btn btn-outline-light btn-lg" href="/Facility/Search"><i class="bi bi-calendar-week me-1" aria-hidden="true"></i>Browse with Availability</a>
         </div>
     </div>
 </section>
@@ -21,7 +21,7 @@
         @foreach (var sport in Model.PopularSports)
         {
             var icon = ImageResolver.GetSportIconPath(sport.SportName);
-            <div class="col-6 col-md-4 col-lg-2">
+            <div class="col-6 col-md-3">
                 <a class="sport-tile" href="/Facility/Search?facilityType=@Uri.EscapeDataString(sport.SportName)">
                     @if (icon is not null)
                     {
@@ -58,63 +58,67 @@
 </section>
 
 <section class="page-section">
-    <h2 class="h3">How It Works</h2>
-    <div class="row g-3 text-center">
-        <div class="col-md-3">
+    <h2 class="h3 mb-4">How It Works</h2>
+    <div class="row g-4 text-center">
+        <div class="col-6 col-md-3">
             <div class="p-3">
-                <div class="h4 text-primary">1</div>
+                <div class="step-icon"><i class="bi bi-search" aria-hidden="true"></i></div>
                 <h3 class="h6">Search</h3>
-                <p class="small text-muted">Browse or search facilities by sport and location.</p>
+                <p class="small text-muted mb-0">Browse or search facilities by sport and location.</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3">
-                <div class="h4 text-primary">2</div>
+                <div class="step-icon"><i class="bi bi-buildings" aria-hidden="true"></i></div>
                 <h3 class="h6">Choose a facility</h3>
-                <p class="small text-muted">View details, sports supported, and reviews from other members.</p>
+                <p class="small text-muted mb-0">View details, sports supported, and full facility information.</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3">
-                <div class="h4 text-primary">3</div>
+                <div class="step-icon"><i class="bi bi-calendar2-check" aria-hidden="true"></i></div>
                 <h3 class="h6">Select a time</h3>
-                <p class="small text-muted">Check real-time availability for the date and time you want.</p>
+                <p class="small text-muted mb-0">Check real-time availability for the date and time you want.</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3">
-                <div class="h4 text-primary">4</div>
+                <div class="step-icon"><i class="bi bi-patch-check" aria-hidden="true"></i></div>
                 <h3 class="h6">Confirm</h3>
-                <p class="small text-muted">Confirm your booking instantly — no waiting for approval.</p>
+                <p class="small text-muted mb-0">Confirm your booking instantly — no waiting for approval.</p>
             </div>
         </div>
     </div>
 </section>
 
 <section class="page-section">
-    <h2 class="h3">Why Book With Us</h2>
+    <h2 class="h3 mb-4">Why Book With Us</h2>
     <div class="row g-3">
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3 h-100 border rounded-3 bg-white">
-                <h3 class="h6">Easy booking</h3>
+                <i class="bi bi-signpost-split text-primary fs-4" aria-hidden="true"></i>
+                <h3 class="h6 mt-2">Easy booking</h3>
                 <p class="small text-muted mb-0">A simple, guided flow from search to confirmation.</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3 h-100 border rounded-3 bg-white">
-                <h3 class="h6">Real-time availability</h3>
+                <i class="bi bi-clock-history text-primary fs-4" aria-hidden="true"></i>
+                <h3 class="h6 mt-2">Real-time availability</h3>
                 <p class="small text-muted mb-0">See exactly which time slots are free before you book.</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3 h-100 border rounded-3 bg-white">
-                <h3 class="h6">Multiple sports</h3>
+                <i class="bi bi-trophy text-primary fs-4" aria-hidden="true"></i>
+                <h3 class="h6 mt-2">Multiple sports</h3>
                 <p class="small text-muted mb-0">@Model.PopularSports.Count sports across our facility network.</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
             <div class="p-3 h-100 border rounded-3 bg-white">
-                <h3 class="h6">Secure member accounts</h3>
+                <i class="bi bi-shield-lock text-primary fs-4" aria-hidden="true"></i>
+                <h3 class="h6 mt-2">Secure member accounts</h3>
                 <p class="small text-muted mb-0">Your bookings and profile are private to you.</p>
             </div>
         </div>
@@ -125,7 +129,7 @@
 {
     <section class="page-section">
         <div class="p-4 rounded-3 bg-white border text-center">
-            <h2 class="h5">Become a Member</h2>
+            <h2 class="h5"><i class="bi bi-person-plus text-primary me-1" aria-hidden="true"></i>Become a Member</h2>
             <p class="text-muted mb-3">Register to search facilities by date and time, and make bookings.</p>
             <a href="/Account/Register" class="btn btn-primary">Register</a>
         </div>

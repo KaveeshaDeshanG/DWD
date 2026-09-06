@@ -1,30 +1,37 @@
 @* Navigation branches on authentication state (SPEC-002 authorization matrix). *@
 @if (User.Identity?.IsAuthenticated == true)
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="/Booking/MyBookings">My Bookings</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="/Profile">Profile</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="/Profile#sports-preferences">Sports Preferences</a>
-    </li>
-    <li class="nav-item d-flex align-items-center">
-        <span class="nav-link text-muted pe-2">Hello, @User.Identity!.Name</span>
-    </li>
-    <li class="nav-item">
-        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
-        </form>
+    var nameParts = (User.Identity.Name ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    var initials = string.Concat(nameParts.Select(p => p[0])).ToUpperInvariant();
+    if (initials.Length > 2)
+    {
+        initials = initials[..2];
+    }
+
+    <li class="nav-item dropdown">
+        <button class="nav-link dropdown-toggle d-flex align-items-center gap-2 nav-link-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="nav-avatar" aria-hidden="true">@initials</span>
+            <span>@User.Identity!.Name</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <li><a class="dropdown-item" href="/Booking/MyBookings"><i class="bi bi-calendar3 me-2" aria-hidden="true"></i>My Bookings</a></li>
+            <li><a class="dropdown-item" href="/Profile"><i class="bi bi-person me-2" aria-hidden="true"></i>Profile</a></li>
+            <li><a class="dropdown-item" href="/Profile#sports-preferences"><i class="bi bi-trophy me-2" aria-hidden="true"></i>Sports Preferences</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>Logout</button>
+                </form>
+            </li>
+        </ul>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" href="/Account/Login">Login</a>
+        <a class="nav-link text-dark" href="/Account/Login"><i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>Login</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item d-flex align-items-center">
         <a class="btn btn-primary btn-sm" href="/Account/Register">Register</a>
     </li>
 }

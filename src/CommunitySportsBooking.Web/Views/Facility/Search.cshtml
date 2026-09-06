@@ -1,36 +1,68 @@
+@using CommunitySportsBooking.Web.Services
 @model FacilitySearchViewModel
 @{
     ViewData["Title"] = "Search Facilities";
+    // Mirrors FacilityController.Search's server-side check (Task 6) —
+    // native HTML5 date-input min/max, not a duplicate validation implementation.
+    var minDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+    var maxDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(BookingService.MaxAdvanceBookingDays).ToString("yyyy-MM-dd");
 }
 
 <div class="page-section">
-    <h1 class="h3 mb-1">Search Facilities</h1>
-    <p class="text-muted">Search by type or location. @(Model.IsMemberSearch ? "Add a date and time to see real availability." : "")</p>
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-1">
+        <h1 class="h3 mb-0">Search Facilities</h1>
+        @if (Model.IsMemberSearch)
+        {
+            <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle">
+                <i class="bi bi-person-check me-1" aria-hidden="true"></i>Member Search
+            </span>
+        }
+        else
+        {
+            <span class="badge bg-secondary-subtle text-secondary-emphasis border">
+                <i class="bi bi-person me-1" aria-hidden="true"></i>Guest Search
+            </span>
+        }
+    </div>
+    <p class="text-muted">
+        Search by type or location@(Model.IsMemberSearch ? ", or add a date and time to see real-time availability." : ".")
+    </p>
 
     <div class="form-card mb-3">
-        <form asp-controller="Facility" asp-action="Search" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-controller="Facility" asp-action="Search" method="post" novalidate>
+            <div asp-validation-summary="All"></div>
 
             <div class="row g-3 mb-3">
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <label asp-for="FacilityType" class="form-label"></label>
-                    <input asp-for="FacilityType" class="form-control" />
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-building" aria-hidden="true"></i></span>
+                        <input asp-for="FacilityType" class="form-control" placeholder="e.g. Cricket, or Tennis Court" />
+                    </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <label asp-for="Location" class="form-label"></label>
-                    <input asp-for="Location" class="form-control" />
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
+                        <input asp-for="Location" class="form-control" placeholder="e.g. Springfield" />
+                    </div>
                 </div>
                 @if (Model.IsMemberSearch)
                 {
-                    <div class="col-md-2">
+                    @* col-12 below sm: below 576px, col-6 left an orphaned
+                       half-width EndTime field wrapped alone onto its own row
+                       (Date+StartTime paired above it) — each field now takes
+                       the full row on the smallest phones, then packs 3-across
+                       from sm (576px) up exactly as before. *@
+                    <div class="col-12 col-sm-4 col-lg-2">
                         <label asp-for="BookingDate" class="form-label"></label>
-                        <input asp-for="BookingDate" type="date" class="form-control" />
+                        <input asp-for="BookingDate" type="date" class="form-control" min="@minDate" max="@maxDate" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-sm-4 col-lg-2">
                         <label asp-for="StartTime" class="form-label"></label>
                         <input asp-for="StartTime" type="time" class="form-control" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-12 col-sm-4 col-lg-2">
                         <label asp-for="EndTime" class="form-label"></label>
                         <input asp-for="EndTime" type="time" class="form-control" />
                     </div>
@@ -39,14 +71,20 @@
 
             @if (!Model.IsMemberSearch)
             {
-                <p class="small text-muted">
-                    Searching as a guest shows facility type and location only.
-                    <a href="/Account/Login?ReturnUrl=%2FFacility%2FSearch">Sign in</a> or
-                    <a href="/Account/Register">register</a> to search a specific date and time and see real-time availability.
-                </p>
+                <div class="d-flex align-items-start gap-2 p-3 mb-3 rounded-3" style="background-color:var(--brand-surface-alt);">
+                    <i class="bi bi-info-circle-fill text-primary mt-1" aria-hidden="true"></i>
+                    <p class="small text-muted mb-0">
+                        Guests can search by facility type and location only.
+                        <a href="/Account/Login?ReturnUrl=%2FFacility%2FSearch">Sign in</a> or
+                        <a href="/Account/Register">register</a> to search a specific date and time and see real-time availability.
+                    </p>
+                </div>
             }
 
-            <button type="submit" class="btn btn-primary">Search</button>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+                <a href="/Facility/Search" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Clear</a>
+            </div>
         </form>
     </div>
 
@@ -55,11 +93,13 @@
         @if (!Model.Results.Any())
         {
             <div class="empty-state">
-                <p class="mb-0">No facilities matched your search.</p>
+                <i class="bi bi-search fs-2 text-muted d-block mb-2" aria-hidden="true"></i>
+                <p class="mb-0">No facilities matched your search. Try a different type or location.</p>
             </div>
         }
         else
         {
+            <p class="text-muted">@Model.Results.Count facilit@(Model.Results.Count == 1 ? "y" : "ies") found.</p>
             <div class="row">
                 @foreach (var facility in Model.Results)
                 {

@@ -1,39 +1,81 @@
+@using CommunitySportsBooking.Web.Services
 @model CreateBookingViewModel
 @{
     ViewData["Title"] = "Book Facility";
+    // Mirrors BookingController.Create's server-side check (Task 6) — native
+    // HTML5 date-input min/max, not a duplicate validation implementation.
+    var minDate = DateOnly.FromDateTime(DateTime.UtcNow).ToString("yyyy-MM-dd");
+    var maxDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(BookingService.MaxAdvanceBookingDays).ToString("yyyy-MM-dd");
 }
 
 <div class="page-section">
+    <a href="/Facility/@Model.FacilityId" class="link-secondary small d-inline-block mb-3"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to facility</a>
     <h1 class="h3 mb-1">Book: @Model.FacilityName</h1>
     <p class="text-muted mb-4">Choose a date and time window for this facility.</p>
 
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row g-4">
+        <div class="col-lg-7">
             <div class="form-card">
-                <form asp-controller="Booking" asp-action="Create" method="post">
+                <form asp-controller="Booking" asp-action="Create" method="post" novalidate data-loading-protect>
                     <input type="hidden" asp-for="FacilityId" />
                     <input type="hidden" asp-for="FacilityName" />
-                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <input type="hidden" asp-for="FacilityType" />
+                    <div asp-validation-summary="All"></div>
 
-                    <div class="form-group mb-3">
+                    <div class="mb-3">
                         <label asp-for="BookingDate" class="form-label"></label>
-                        <input asp-for="BookingDate" type="date" class="form-control" />
+                        <input asp-for="BookingDate" type="date" class="form-control" min="@minDate" max="@maxDate" />
                         <span asp-validation-for="BookingDate" class="text-danger"></span>
                     </div>
-                    <div class="form-group mb-3">
-                        <label asp-for="StartTime" class="form-label"></label>
-                        <input asp-for="StartTime" type="time" class="form-control" />
-                        <span asp-validation-for="StartTime" class="text-danger"></span>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label asp-for="EndTime" class="form-label"></label>
-                        <input asp-for="EndTime" type="time" class="form-control" />
-                        <span asp-validation-for="EndTime" class="text-danger"></span>
+
+                    <div class="mb-2">
+                        <label class="form-label">Quick time picker <span class="text-muted fw-normal">(optional)</span></label>
+                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Quick time picker" data-slot-group data-start-target="StartTime" data-end-target="EndTime">
+                            <button type="button" class="slot" aria-pressed="false" data-start="08:00" data-end="09:00">08:00–09:00</button>
+                            <button type="button" class="slot" aria-pressed="false" data-start="09:00" data-end="10:00">09:00–10:00</button>
+                            <button type="button" class="slot" aria-pressed="false" data-start="12:00" data-end="13:00">12:00–13:00</button>
+                            <button type="button" class="slot" aria-pressed="false" data-start="17:00" data-end="18:00">17:00–18:00</button>
+                            <button type="button" class="slot" aria-pressed="false" data-start="18:00" data-end="19:00">18:00–19:00</button>
+                            <button type="button" class="slot" aria-pressed="false" data-start="19:00" data-end="20:00">19:00–20:00</button>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
-                    <a href="/Facility/@Model.FacilityId" class="btn btn-outline-secondary">Cancel</a>
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label asp-for="StartTime" class="form-label"></label>
+                            <input asp-for="StartTime" type="time" class="form-control" />
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="EndTime" class="form-label"></label>
+                            <input asp-for="EndTime" type="time" class="form-control" />
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-calendar-check me-1" aria-hidden="true"></i>Confirm Booking</button>
+                        <a href="/Facility/@Model.FacilityId" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
                 </form>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="booking-summary" id="bookingSummary">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" alt="" />
+                    <div>
+                        <div class="fw-semibold">@Model.FacilityName</div>
+                        <div class="small text-muted">@Model.FacilityType</div>
+                    </div>
+                </div>
+                <dl>
+                    <dt>Date</dt>
+                    <dd id="summaryDate">Not selected</dd>
+                    <dt>Time</dt>
+                    <dd id="summaryTime" class="mb-0">Not selected</dd>
+                </dl>
             </div>
         </div>
     </div>

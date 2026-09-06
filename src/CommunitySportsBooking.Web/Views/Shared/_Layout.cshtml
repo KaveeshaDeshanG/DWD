@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,25 +9,43 @@
     <title>@ViewData["Title"] - Community Sports Facilities Booking System</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CommunitySportsBooking.Web.styles.css" asp-append-version="true" />
 </head>
 <body class="d-flex flex-column min-vh-100">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-xl navbar-light bg-white border-bottom sticky-top">
             <div class="container-fluid">
-                <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">Community Sports Booking</a>
+                <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-trophy-fill text-primary" aria-hidden="true"></i> Community Sports Booking
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-xl-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link @(currentController == "Home" ? "active" : "")" aria-current="@(currentController == "Home" ? "page" : null)" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1" aria-hidden="true"></i>Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Facility">Facilities</a>
+                            <a class="nav-link @(currentController == "Facility" ? "active" : "")" aria-current="@(currentController == "Facility" ? "page" : null)" href="/Facility">
+                                <i class="bi bi-building me-1" aria-hidden="true"></i>Facilities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Review" ? "active" : "")" aria-current="@(currentController == "Review" ? "page" : null)" href="/Review/Search">
+                                <i class="bi bi-star me-1" aria-hidden="true"></i>Reviews
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Inquiry" ? "active" : "")" aria-current="@(currentController == "Inquiry" ? "page" : null)" href="/Inquiry/Create">
+                                <i class="bi bi-envelope me-1" aria-hidden="true"></i>Contact
+                            </a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
@@ -36,25 +57,50 @@
         </nav>
     </header>
     <div class="container flex-grow-1">
-        <main role="main" class="pb-3">
+        <main role="main" id="main-content" class="pb-3">
             @await Html.PartialAsync("_AlertPartial")
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <div class="row gy-3">
-                <div class="col-md-6">
-                    <strong class="text-dark">Community Sports Facilities Booking System</strong>
-                    <p class="mb-0 small">Find and book local sports facilities easily.</p>
+    <footer class="border-top footer-modern">
+        <div class="container py-4">
+            <div class="row gy-4">
+                <div class="col-md-5">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-trophy-fill text-primary fs-5" aria-hidden="true"></i>
+                        <strong class="text-dark">Community Sports Facilities Booking System</strong>
+                    </div>
+                    <p class="mb-0 small text-muted">Find, explore and book local sports facilities in a few clicks.</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="/" class="link-secondary me-3">Home</a>
-                    <a href="/Facility" class="link-secondary">Facilities</a>
-                    <p class="mb-0 small mt-2">&copy; 2026 Community Sports Facilities Booking System</p>
+                <div class="col-6 col-md-3">
+                    <h6 class="text-uppercase small fw-bold text-muted mb-2">Navigate</h6>
+                    <ul class="list-unstyled small footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/Facility">Facilities</a></li>
+                        <li><a href="/Facility/Search">Search</a></li>
+                        <li><a href="/Review/Search">Reviews</a></li>
+                        <li><a href="/Inquiry/Create">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md-4">
+                    <h6 class="text-uppercase small fw-bold text-muted mb-2">Account</h6>
+                    <ul class="list-unstyled small footer-links">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li><a href="/Booking/MyBookings">My Bookings</a></li>
+                            <li><a href="/Profile">Profile</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/Account/Login">Login</a></li>
+                            <li><a href="/Account/Register">Register</a></li>
+                        }
+                    </ul>
                 </div>
             </div>
+            <hr />
+            <p class="mb-0 small text-muted text-center">&copy; 2026 Community Sports Facilities Booking System</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

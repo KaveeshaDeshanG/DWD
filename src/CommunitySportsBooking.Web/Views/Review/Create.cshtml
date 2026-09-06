@@ -1,0 +1,58 @@
+@model CreateReviewViewModel
+@{
+    ViewData["Title"] = "Leave a Review";
+}
+
+<div class="page-section">
+    <h1 class="h3 mb-1">Leave a Review</h1>
+    <p class="text-muted mb-4">Share your experience at <strong>@Model.FacilityName</strong>.</p>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="booking-summary mb-3">
+                <dl class="mb-0">
+                    <dt>Facility</dt>
+                    <dd>@Model.FacilityName</dd>
+                    <dt>Booking Date</dt>
+                    <dd class="mb-0">@Model.BookingDate.ToString("dd MMM yyyy") &middot; @Model.StartTime.ToString("HH:mm")–@Model.EndTime.ToString("HH:mm")</dd>
+                </dl>
+            </div>
+
+            <div class="form-card">
+                <form asp-controller="Review" asp-action="Create" method="post" novalidate>
+                    <input type="hidden" asp-for="BookingId" />
+                    <div asp-validation-summary="All"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label d-block">Rating</label>
+                        <div class="rating-input" role="radiogroup" aria-label="Rating out of 5 stars">
+                            @for (var i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" class="rating-star-input" name="Rating" id="rating-@i" value="@i"
+                                       checked="@(Model.Rating == i)" />
+                                <label class="rating-star-label" for="rating-@i" title="@i star@(i > 1 ? "s" : "")">
+                                    <i class="bi bi-star-fill" aria-hidden="true"></i>
+                                    <span class="visually-hidden">@i star@(i > 1 ? "s" : "")</span>
+                                </label>
+                            }
+                        </div>
+                        <span asp-validation-for="Rating" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Comment" class="form-label"></label>
+                        <textarea asp-for="Comment" class="form-control" rows="4" placeholder="What did you think of this facility?"></textarea>
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send me-1" aria-hidden="true"></i>Submit Review</button>
+                    <a href="/Booking/MyBookings" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

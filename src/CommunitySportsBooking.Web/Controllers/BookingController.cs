@@ -5,6 +5,7 @@ using CommunitySportsBooking.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CommunitySportsBooking.Web.Controllers;
 
@@ -12,10 +13,18 @@ namespace CommunitySportsBooking.Web.Controllers;
 public class BookingController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<BookingController> _logger;
 
-    public BookingController(AppDbContext context)
+    // logger is optional (defaults to a no-op) so every existing
+    // `new BookingController(context)` call site — including every test that
+    // constructs one directly — keeps compiling and behaving identically.
+    // ILogger<T> itself needs no Program.cs registration: the default host
+    // logging providers are already wired up by WebApplication.CreateBuilder,
+    // so real requests get a real logger with zero DI changes.
+    public BookingController(AppDbContext context, ILogger<BookingController>? logger = null)
     {
         _context = context;
+        _logger = logger ?? NullLogger<BookingController>.Instance;
     }
 
     [HttpGet]
@@ -32,7 +41,8 @@ public class BookingController : Controller
         return View(new CreateBookingViewModel
         {
             FacilityId = facility.FacilityId,
-            FacilityName = facility.FacilityName
+            FacilityName = facility.FacilityName,
+            FacilityType = facility.FacilityType
         });
     }
 
@@ -44,6 +54,11 @@ public class BookingController : Controller
         if (model.BookingDate < DateOnly.FromDateTime(DateTime.UtcNow))
         {
             ModelState.AddModelError(nameof(model.BookingDate), "Date cannot be in the past.");
+        }
+        else if (BookingService.IsBeyondMaxAdvanceWindow(model.BookingDate))
+        {
+            ModelState.AddModelError(nameof(model.BookingDate),
+                $"Bookings can only be made up to {BookingService.MaxAdvanceBookingDays} days in advance.");
         }
         if (model.StartTime >= model.EndTime)
         {
@@ -72,7 +87,7 @@ public class BookingController : Controller
         }
 
         var result = await BookingService.CreateBookingAsync(
-            _context, memberId, model.FacilityId, model.BookingDate, model.StartTime, model.EndTime);
+            _context, memberId, model.FacilityId, model.BookingDate, model.StartTime, model.EndTime, _logger);
 
         if (!result.Success)
         {
@@ -110,6 +125,11 @@ public class BookingController : Controller
         foreach (var booking in bookings)
         {
             booking.IsCompleted = BookingService.IsCompleted(booking.BookingDate, booking.EndTime);
+            // CanCancel is deliberately based on HasStarted, not IsCompleted:
+            // a booking that is currently in progress (started but not yet
+            // finished) has IsCompleted == false, so it correctly stays in
+            // the Upcoming list, but must not be cancellable.
+            booking.CanCancel = !BookingService.HasStarted(booking.BookingDate, booking.StartTime);
             if (booking.IsCompleted)
             {
                 model.CompletedBookings.Add(booking);
@@ -123,9 +143,48 @@ public class BookingController : Controller
         return View(model);
     }
 
+    // POST-only, [Authorize] (class-level) + [ValidateAntiForgeryToken] —
+    // Task 1's cancellation feature. Ownership and eligibility are re-derived
+    // from the database on every request from User.GetMemberId(), never from
+    // a client-supplied MemberId, exactly the same discipline
+    // ReviewController.CheckEligibility already uses for review eligibility.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cancel(int bookingId)
+    {
+        var memberId = User.GetMemberId();
+        var booking = await _context.Bookings.SingleOrDefaultAsync(b => b.BookingId == bookingId);
+
+        // NotFound rather than Forbid for both "doesn't exist" and "isn't
+        // yours" — a probing request can't distinguish the two cases, same
+        // information-disclosure discipline as ReviewController.CheckEligibility.
+        if (booking is null || booking.MemberId != memberId)
+        {
+            return NotFound();
+        }
+
+        if (BookingService.HasStarted(booking.BookingDate, booking.StartTime))
+        {
+            TempData["ErrorMessage"] = "This booking cannot be cancelled because it has already started or been completed.";
+            return RedirectToAction(nameof(MyBookings));
+        }
+
+        // Safe as a hard delete: a booking eligible for cancellation has not
+        // started yet, and Review can only be created for a completed
+        // booking (ReviewController.CheckEligibility), so a cancellable
+        // booking can never have a Review row — FK_Review_Booking's CASCADE
+        // is defensive here, not something this path actually relies on.
+        _context.Bookings.Remove(booking);
+        await _context.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = "Your booking has been cancelled.";
+        return RedirectToAction(nameof(MyBookings));
+    }
+
     private async Task RepopulateFacilityNameAsync(CreateBookingViewModel model)
     {
         var facility = await _context.Facilities.FindAsync(model.FacilityId);
         model.FacilityName = facility?.FacilityName ?? string.Empty;
+        model.FacilityType = facility?.FacilityType ?? string.Empty;
     }
 }

@@ -27,8 +27,10 @@ INSERT INTO dbo.Sport (SportName) VALUES
     (N'Basketball'),    -- 2
     (N'Swimming'),      -- 3
     (N'Badminton'),     -- 4
-    (N'Football'),      -- 5
-    (N'Athletics');     -- 6
+    (N'Soccer'),        -- 5 (named "Soccer" per the coursework brief's terminology)
+    (N'Athletics'),     -- 6
+    (N'Cricket'),       -- 7
+    (N'Volleyball');    -- 8
 GO
 
 -- -----------------------------------------------------------------------------
@@ -37,10 +39,12 @@ GO
 INSERT INTO dbo.Facility (FacilityName, FacilityType, Location, AddressLine, City, Capacity, Description, IsActive) VALUES
     (N'Riverside Tennis Courts',  N'Tennis Court',      N'Riverside',  N'12 High Street',    N'Springfield', 4,   N'Two outdoor hard courts by the river.', 1),   -- 1
     (N'Central Community Pool',   N'Swimming Pool',     N'City Centre', N'1 Pool Road',       N'Springfield', 50,  N'25m indoor pool with lane swimming sessions.', 1), -- 2
-    (N'Oakwood Sports Hall',      N'Sports Hall',       N'Oakwood',    N'5 Oak Avenue',       N'Springfield', 30,  N'Multi-use hall for basketball and badminton.', 1), -- 3
+    (N'Oakwood Sports Hall',      N'Sports Hall',       N'Oakwood',    N'5 Oak Avenue',       N'Springfield', 30,  N'Multi-use hall for basketball, badminton and volleyball.', 1), -- 3
     (N'Westside Football Pitch',  N'Football Pitch',    N'Westside',   N'20 West Road',       N'Springfield', 22,  N'Full-size grass pitch with floodlights.', 1),  -- 4
-    (N'Northgate Athletics Track', N'Athletics Track',  N'Northgate',  N'8 North Boulevard',  N'Springfield', 100, N'8-lane outdoor athletics track.', 1),          -- 5
-    (N'Old Mill Badminton Courts', N'Badminton Court',  N'Mill End',   N'3 Mill Lane',        N'Springfield', 8,   N'Currently closed for refurbishment.', 0);      -- 6 (inactive)
+    (N'Northgate Athletics Track', N'Athletics Track',  N'Northgate',  N'8 North Boulevard',  N'Springfield', 100, N'8-lane outdoor athletics track with a grass infield also used for cricket.', 1), -- 5
+    (N'Old Mill Badminton Courts', N'Badminton Court',  N'Mill End',   N'3 Mill Lane',        N'Springfield', 8,   N'Currently closed for refurbishment.', 0),     -- 6 (inactive)
+    (N'Eastfield Cricket Ground', N'Cricket Ground',    N'Eastfield',  N'14 East Lane',       N'Springfield', 22,  N'Dedicated cricket ground with a full-size pitch and practice nets.', 1), -- 7
+    (N'Southgate Volleyball Court', N'Volleyball Court', N'Southgate', N'9 South Terrace',    N'Springfield', 12,  N'Outdoor sand volleyball court, popular for casual and league play.', 1); -- 8
 GO
 
 -- -----------------------------------------------------------------------------
@@ -51,9 +55,13 @@ INSERT INTO dbo.FacilitySport (FacilityId, SportId) VALUES
     (2, 3),  -- Central Community Pool - Swimming
     (3, 2),  -- Oakwood Sports Hall - Basketball
     (3, 4),  -- Oakwood Sports Hall - Badminton
-    (4, 5),  -- Westside Football Pitch - Football
+    (4, 5),  -- Westside Football Pitch - Soccer
     (5, 6),  -- Northgate Athletics Track - Athletics
-    (6, 4);  -- Old Mill Badminton Courts - Badminton (inactive facility)
+    (6, 4),  -- Old Mill Badminton Courts - Badminton (inactive facility)
+    (5, 7),  -- Northgate Athletics Track - Cricket (track infield used for cricket)
+    (3, 8),  -- Oakwood Sports Hall - Volleyball (multi-use indoor hall)
+    (7, 7),  -- Eastfield Cricket Ground - Cricket (dedicated facility)
+    (8, 8);  -- Southgate Volleyball Court - Volleyball (dedicated facility)
 GO
 
 -- -----------------------------------------------------------------------------
@@ -76,7 +84,7 @@ INSERT INTO dbo.MemberSport (MemberId, SportId) VALUES
     (2, 3),  -- Ben - Swimming
     (3, 2),  -- Chloe - Basketball
     (3, 4),  -- Chloe - Badminton
-    (4, 5),  -- Daniel - Football
+    (4, 5),  -- Daniel - Soccer
     (5, 6),  -- Emma - Athletics
     (5, 1);  -- Emma - Tennis
 GO

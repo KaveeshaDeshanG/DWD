@@ -4,8 +4,10 @@ namespace CommunitySportsBooking.Web.Models.ViewModels;
 
 public class FacilitySearchViewModel
 {
+    // Matches either the venue's own FacilityType text or any sport it
+    // supports (FacilityController.Search) — the label reflects both.
     [StringLength(50)]
-    [Display(Name = "Facility Type")]
+    [Display(Name = "Sport or Facility Type")]
     public string? FacilityType { get; set; }
 
     [StringLength(100)]

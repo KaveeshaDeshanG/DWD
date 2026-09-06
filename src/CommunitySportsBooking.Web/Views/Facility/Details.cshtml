@@ -4,52 +4,104 @@
 }
 
 <div class="page-section">
-    <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" alt="" class="w-100 rounded-3 mb-3" style="max-height:280px;object-fit:cover;" />
+    <a href="/Facility" class="link-secondary small d-inline-block mb-3"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Facilities</a>
 
-    <h1 class="h3 mb-0">@Model.FacilityName</h1>
-    <h2 class="h6 text-muted mb-3">@Model.FacilityType</h2>
+    <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" alt="" class="w-100 rounded-4 mb-4" style="max-height:320px;object-fit:cover;" />
 
-    <div class="form-card mb-3">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Address</dt>
-            <dd class="col-sm-9">@Model.AddressLine, @Model.City</dd>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <h1 class="h3 mb-1">@Model.FacilityName</h1>
+            <p class="text-muted mb-2">
+                <i class="bi bi-tag me-1" aria-hidden="true"></i>@Model.FacilityType
+                @if (Model.Reviews.ReviewCount > 0)
+                {
+                    <span class="ms-2">
+                        <i class="bi bi-star-fill rating-star-display" aria-hidden="true"></i>
+                        @Model.Reviews.AverageRating <span class="text-muted">(@Model.Reviews.ReviewCount review@(Model.Reviews.ReviewCount == 1 ? "" : "s"))</span>
+                    </span>
+                }
+            </p>
 
-            <dt class="col-sm-3">Location</dt>
-            <dd class="col-sm-9">@Model.Location</dd>
-
-            @if (Model.Capacity.HasValue)
+            @if (Model.SupportedSports.Any())
             {
-                <dt class="col-sm-3">Capacity</dt>
-                <dd class="col-sm-9">@Model.Capacity</dd>
+                <div class="d-flex flex-wrap gap-1 mb-3">
+                    @foreach (var sport in Model.SupportedSports)
+                    {
+                        <span class="sport-tag">@sport</span>
+                    }
+                </div>
             }
 
             @if (!string.IsNullOrEmpty(Model.Description))
             {
-                <dt class="col-sm-3">Description</dt>
-                <dd class="col-sm-9">@Model.Description</dd>
+                <div class="form-section">
+                    <div class="form-section-title"><i class="bi bi-file-text" aria-hidden="true"></i> About this facility</div>
+                    <p class="mb-0">@Model.Description</p>
+                </div>
             }
 
-            <dt class="col-sm-3">Sports Supported</dt>
-            <dd class="col-sm-9 mb-0">
-                @if (Model.SupportedSports.Any())
+            <div class="form-section">
+                <div class="form-section-title"><i class="bi bi-geo-alt" aria-hidden="true"></i> Location</div>
+                <p class="mb-1">@Model.AddressLine, @Model.City</p>
+                <p class="text-muted mb-0">@Model.Location</p>
+            </div>
+
+            @if (Model.Capacity.HasValue)
+            {
+                <div class="form-section">
+                    <div class="form-section-title"><i class="bi bi-people" aria-hidden="true"></i> Capacity</div>
+                    <p class="mb-0">@Model.Capacity people</p>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4">
+            <div class="form-card text-center booking-cta-panel">
+                <i class="bi bi-calendar-check fs-1 text-primary mb-2 d-block" aria-hidden="true"></i>
+                <h2 class="h5 mb-1">Ready to book?</h2>
+                <p class="text-muted small mb-3">Choose a date and time that works for you.</p>
+                @if (User.Identity?.IsAuthenticated == true)
                 {
-                    @string.Join(", ", Model.SupportedSports)
+                    <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary w-100 py-2">
+                        <i class="bi bi-calendar-plus me-1" aria-hidden="true"></i>Book This Facility
+                    </a>
                 }
                 else
                 {
-                    <text>None listed</text>
+                    <a href="/Account/Login?ReturnUrl=%2FBooking%2FCreate%3FfacilityId%3D@Model.FacilityId" class="btn btn-primary w-100 py-2">
+                        <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>Sign in to Book
+                    </a>
+                    <p class="small text-muted mt-2 mb-0">New here? <a href="/Account/Register">Create an account</a></p>
                 }
-            </dd>
-        </dl>
+            </div>
+        </div>
     </div>
 
-    <a href="/Facility" class="btn btn-outline-secondary">Back to Facilities</a>
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <a href="/Booking/Create?facilityId=@Model.FacilityId" class="btn btn-primary">Book This Facility</a>
-    }
-    else
-    {
-        <a href="/Account/Login?ReturnUrl=%2FBooking%2FCreate%3FfacilityId%3D@Model.FacilityId" class="btn btn-primary">Sign in to Book</a>
-    }
+    <div class="page-section">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h2 class="h4 mb-0"><i class="bi bi-star me-1" aria-hidden="true"></i>Reviews</h2>
+            <a href="/Review/Search" class="link-primary small">Browse all reviews &rarr;</a>
+        </div>
+
+        @if (!Model.Reviews.Reviews.Any())
+        {
+            <div class="empty-state">
+                <p class="mb-0">No reviews yet. Be the first to share your experience after booking.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var review in Model.Reviews.Reviews)
+            {
+                <div class="review-card">
+                    <div class="review-meta">
+                        <span class="text-muted small">@review.ReviewerDisplayName</span>
+                        <span class="review-date">@review.ReviewDate.ToString("dd MMM yyyy")</span>
+                    </div>
+                    @await Html.PartialAsync("_StarRatingPartial", review.Rating)
+                    <p class="mb-0 mt-2">@review.Comment</p>
+                </div>
+            }
+        }
+    </div>
 </div>

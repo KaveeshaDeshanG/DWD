@@ -1,10 +1,12 @@
 using System.Security.Claims;
 using CommunitySportsBooking.Web.Controllers;
 using CommunitySportsBooking.Web.Data;
+using CommunitySportsBooking.Web.Models.Entities;
 using CommunitySportsBooking.Web.Models.ViewModels;
 using CommunitySportsBooking.Web.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -44,6 +46,28 @@ public class BookingFunctionalityTests
             {
                 HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(identity) }
             }
+        };
+    }
+
+    // No-op ITempDataProvider — Cancel's TempData["SuccessMessage"]/
+    // ["ErrorMessage"] writes throw on a bare test ControllerContext unless a
+    // provider is wired up. Same test scaffolding as
+    // ReviewFunctionalityTests/InquiryFunctionalityTests's identical helper —
+    // MVC plumbing, not a mock of any business logic or the database.
+    private sealed class NoOpTempDataProvider : ITempDataProvider
+    {
+        public IDictionary<string, object> LoadTempData(HttpContext context) => new Dictionary<string, object>();
+        public void SaveTempData(HttpContext context, IDictionary<string, object> values) { }
+    }
+
+    private static BookingController CreateBookingController(AppDbContext context, int memberId)
+    {
+        var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, memberId.ToString()) }, "TestAuth");
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(identity) };
+        return new BookingController(context)
+        {
+            ControllerContext = new ControllerContext { HttpContext = httpContext },
+            TempData = new TempDataDictionary(httpContext, new NoOpTempDataProvider())
         };
     }
 
@@ -375,15 +399,65 @@ public class BookingFunctionalityTests
 
         var view = Assert.IsType<ViewResult>(result);
         var vm = Assert.IsType<FacilitySearchViewModel>(view.Model);
-        Assert.Equal(5, vm.Results.Count); // exactly the 5 active seeded facilities
+        // 7 active facilities as of 2026-09-05 (was 5): Eastfield Cricket
+        // Ground and Southgate Volleyball Court added as dedicated
+        // facilities for the two new sports; Facility 6 (Old Mill Badminton
+        // Courts) remains the one deliberately inactive seed row.
+        Assert.Equal(7, vm.Results.Count);
         Assert.DoesNotContain(vm.Results, f => f.FacilityId == 6);
     }
 
     [Fact]
     public async Task Search_InactiveFacilityNeverReturned_EvenWhenFilterMatchesItsExactType()
     {
-        // FacilityType "Badminton Court" matches ONLY Facility 6, which is inactive —
-        // a correct result set is empty, not a leaked inactive row.
+        // "Badminton Court" (the exact FacilityType text) matches ONLY
+        // Facility 6, which is inactive — a correct result set is empty, not
+        // a leaked inactive row. (Deliberately not the bare word "Badminton"
+        // here — see Search_FilterBySportName_MatchesFacilitiesBySupportedSport
+        // below for why that now correctly returns a different, active
+        // facility instead.)
+        await using var context = CreateContext();
+        var controller = CreateFacilityController(context);
+        var model = new FacilitySearchViewModel { FacilityType = "Badminton Court" };
+
+        var result = await controller.Search(model);
+
+        var view = Assert.IsType<ViewResult>(result);
+        var vm = Assert.IsType<FacilitySearchViewModel>(view.Model);
+        Assert.Empty(vm.Results);
+    }
+
+    [Fact]
+    public async Task Search_FilterBySportName_MatchesFacilitiesBySupportedSport_NotJustLiteralFacilityTypeText()
+    {
+        // Real bug found by actually running a search for each of the 8
+        // sports (2026-09-05): searching "Basketball" returned zero results,
+        // because Oakwood Sports Hall's FacilityType is "Sports Hall" — the
+        // word "Basketball" never appears in it — even though the facility
+        // genuinely supports basketball via FacilitySport. The same gap hit
+        // Soccer ("Football Pitch"), Cricket, and Volleyball. Fixed by also
+        // matching a facility's supported sports, not just its FacilityType
+        // text. This is exactly the search a Home-page sport tile performs
+        // (links to /Facility/Search?facilityType=<sport name>).
+        await using var context = CreateContext();
+        var controller = CreateFacilityController(context);
+        var model = new FacilitySearchViewModel { FacilityType = "Basketball" };
+
+        var result = await controller.Search(model);
+
+        var view = Assert.IsType<ViewResult>(result);
+        var vm = Assert.IsType<FacilitySearchViewModel>(view.Model);
+        Assert.Contains(vm.Results, f => f.FacilityId == 3); // Oakwood Sports Hall — supports Basketball, FacilityType doesn't mention it
+    }
+
+    [Fact]
+    public async Task Search_FilterBySportName_Badminton_FindsActiveFacility_ExcludesInactiveOne()
+    {
+        // Same fix as above, using a sport with BOTH an active facility that
+        // supports it via FacilitySport (Oakwood Sports Hall) and an
+        // inactive facility whose FacilityType literally contains the word
+        // (Old Mill Badminton Courts) — proves the two matching paths
+        // combine correctly and IsActive filtering still holds either way.
         await using var context = CreateContext();
         var controller = CreateFacilityController(context);
         var model = new FacilitySearchViewModel { FacilityType = "Badminton" };
@@ -392,7 +466,24 @@ public class BookingFunctionalityTests
 
         var view = Assert.IsType<ViewResult>(result);
         var vm = Assert.IsType<FacilitySearchViewModel>(view.Model);
-        Assert.Empty(vm.Results);
+        Assert.Contains(vm.Results, f => f.FacilityId == 3); // active, matches via supported sport
+        Assert.DoesNotContain(vm.Results, f => f.FacilityId == 6); // inactive, must never appear regardless of match path
+    }
+
+    [Theory]
+    [InlineData("Cricket", 7)]   // Eastfield Cricket Ground — matches via FacilityType text
+    [InlineData("Volleyball", 8)] // Southgate Volleyball Court — matches via FacilityType text
+    public async Task Search_FilterBySportName_NewSports_FindTheirDedicatedFacility(string sportName, int expectedFacilityId)
+    {
+        await using var context = CreateContext();
+        var controller = CreateFacilityController(context);
+        var model = new FacilitySearchViewModel { FacilityType = sportName };
+
+        var result = await controller.Search(model);
+
+        var view = Assert.IsType<ViewResult>(result);
+        var vm = Assert.IsType<FacilitySearchViewModel>(view.Model);
+        Assert.Contains(vm.Results, f => f.FacilityId == expectedFacilityId);
     }
 
     // ---------- FR-011: validation must run before any availability lookup ----------
@@ -461,6 +552,27 @@ public class BookingFunctionalityTests
         Assert.Empty(vm.Results);
         Assert.False(vm.HasSearched);
         Assert.Empty(capturedSql); // no query of any kind ran — not the facility list, not availability
+    }
+
+    [Fact]
+    public async Task Search_DateBeyondMaxAdvanceWindow_RejectsBeforeAnyDatabaseQueryRuns()
+    {
+        var capturedSql = new List<string>();
+        await using var context = CreateLoggingContext(capturedSql);
+        var controller = CreateFacilityController(context, authenticated: true);
+        var model = new FacilitySearchViewModel
+        {
+            BookingDate = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(BookingService.MaxAdvanceBookingDays + 1)
+        };
+
+        var result = await controller.Search(model);
+
+        Assert.False(controller.ModelState.IsValid);
+        var view = Assert.IsType<ViewResult>(result);
+        var vm = Assert.IsType<FacilitySearchViewModel>(view.Model);
+        Assert.Empty(vm.Results);
+        Assert.False(vm.HasSearched);
+        Assert.Empty(capturedSql);
     }
 
     [Fact]
@@ -586,6 +698,221 @@ public class BookingFunctionalityTests
 
         await using var verify = CreateContext();
         var count = await verify.Bookings.CountAsync(b => b.FacilityId == 3 && b.BookingDate == model.BookingDate);
+        Assert.Equal(0, count);
+    }
+
+    // ---------- Booking cancellation (BookingController.Cancel) ----------
+    // Same discipline as every other test class: real CommunitySportsBookingDB,
+    // every row inserted is cleaned up (a successful cancellation cleans up
+    // after itself by definition; the rejection-path tests still remove the
+    // booking they created in a finally block).
+
+    private static async Task<int> InsertBookingDirectAsync(int memberId, int facilityId, DateOnly date, TimeOnly start, TimeOnly end)
+    {
+        await using var context = CreateContext();
+        var booking = new Booking { MemberId = memberId, FacilityId = facilityId, BookingDate = date, StartTime = start, EndTime = end };
+        context.Bookings.Add(booking);
+        await context.SaveChangesAsync();
+        return booking.BookingId;
+    }
+
+    [Fact]
+    public async Task Cancel_OwnUpcomingBooking_Succeeds()
+    {
+        var bookingId = await InsertBookingDirectAsync(
+            memberId: 1, facilityId: 2, date: new DateOnly(2026, 12, 1), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
+
+        await using var context = CreateContext();
+        var controller = CreateBookingController(context, memberId: 1);
+
+        var result = await controller.Cancel(bookingId);
+
+        var redirect = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal(nameof(BookingController.MyBookings), redirect.ActionName);
+        Assert.Equal("Your booking has been cancelled.", controller.TempData["SuccessMessage"]);
+
+        await using var verify = CreateContext();
+        Assert.Null(await verify.Bookings.FindAsync(bookingId)); // actually removed, not just flagged
+    }
+
+    [Fact]
+    public async Task Cancel_AnotherMembersBooking_ReturnsNotFound()
+    {
+        var bookingId = await InsertBookingDirectAsync(
+            memberId: 1, facilityId: 2, date: new DateOnly(2026, 12, 2), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
+
+        try
+        {
+            await using var context = CreateContext();
+            var controller = CreateBookingController(context, memberId: 2); // Ben, not the booking's owner (Alice)
+
+            var result = await controller.Cancel(bookingId);
+
+            Assert.IsType<NotFoundResult>(result);
+
+            await using var verify = CreateContext();
+            Assert.NotNull(await verify.Bookings.FindAsync(bookingId)); // untouched — never cancelled
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
+    }
+
+    [Fact]
+    public async Task Cancel_NonexistentBookingId_ReturnsNotFound()
+    {
+        await using var context = CreateContext();
+        var controller = CreateBookingController(context, memberId: 1);
+
+        var result = await controller.Cancel(bookingId: 9_999_999);
+
+        Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task Cancel_CompletedBooking_Rejected()
+    {
+        // Inserted directly (bypasses usp_CreateBooking, same reasoning
+        // database/05_SeedData.sql and ReviewFunctionalityTests already
+        // document for historical bookings) since a genuinely past booking
+        // could never be created through the normal booking flow.
+        var bookingId = await InsertBookingDirectAsync(
+            memberId: 1, facilityId: 2, date: new DateOnly(2020, 1, 1), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
+
+        try
+        {
+            await using var context = CreateContext();
+            var controller = CreateBookingController(context, memberId: 1);
+
+            var result = await controller.Cancel(bookingId);
+
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(BookingController.MyBookings), redirect.ActionName);
+            Assert.Equal(
+                "This booking cannot be cancelled because it has already started or been completed.",
+                controller.TempData["ErrorMessage"]);
+
+            await using var verify = CreateContext();
+            Assert.NotNull(await verify.Bookings.FindAsync(bookingId)); // untouched — never cancelled
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
+    }
+
+    [Fact]
+    public async Task Cancel_StartedBooking_Rejected()
+    {
+        // "Started but not yet completed" — today's date, StartTime already
+        // in the past, EndTime still in the future, computed live rather than
+        // hardcoded so this test is correct on whatever real day it runs.
+        // This is exactly the case BookingService.HasStarted (StartTime-based)
+        // must reject even though BookingService.IsCompleted (EndTime-based)
+        // would still call it Upcoming.
+        var now = DateTime.UtcNow;
+        var date = DateOnly.FromDateTime(now);
+        var start = TimeOnly.FromDateTime(now.AddMinutes(-30));
+        var end = TimeOnly.FromDateTime(now.AddMinutes(30));
+        var bookingId = await InsertBookingDirectAsync(memberId: 1, facilityId: 2, date, start, end);
+
+        try
+        {
+            await using var context = CreateContext();
+            var controller = CreateBookingController(context, memberId: 1);
+
+            var result = await controller.Cancel(bookingId);
+
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(BookingController.MyBookings), redirect.ActionName);
+            Assert.Equal(
+                "This booking cannot be cancelled because it has already started or been completed.",
+                controller.TempData["ErrorMessage"]);
+
+            await using var verify = CreateContext();
+            Assert.NotNull(await verify.Bookings.FindAsync(bookingId)); // untouched — never cancelled
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
+    }
+
+    [Fact]
+    public async Task Cancel_RequestWithoutAuthentication_IsRejected()
+    {
+        // BookingController carries a class-level [Authorize], which the real
+        // MVC pipeline enforces before this action is ever reached (proven
+        // historically via live HTTP 302 checks, the same pattern this
+        // project has always used for [Authorize] verification — see
+        // ProfileController/ReviewController). This test proves the second,
+        // structural line of defense: even if the action were somehow
+        // reached without a valid identity, Cancel cannot act on any
+        // booking, because User.GetMemberId() throws immediately instead of
+        // silently resolving to a fabricated or default member id.
+        await using var context = CreateContext();
+        var identity = new ClaimsIdentity(); // unauthenticated — no NameIdentifier claim
+        var controller = new BookingController(context)
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal(identity) }
+            }
+        };
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => controller.Cancel(bookingId: 1));
+    }
+
+    [Fact]
+    public void HasStarted_PureFunction_DerivesCorrectly()
+    {
+        var now = DateTime.UtcNow;
+
+        Assert.True(BookingService.HasStarted(
+            DateOnly.FromDateTime(now), TimeOnly.FromDateTime(now.AddMinutes(-5)))); // started 5 min ago
+        Assert.False(BookingService.HasStarted(
+            DateOnly.FromDateTime(now), TimeOnly.FromDateTime(now.AddMinutes(5)))); // starts in 5 min
+        Assert.True(BookingService.HasStarted(new DateOnly(2020, 1, 1), new TimeOnly(9, 0))); // long past
+        Assert.False(BookingService.HasStarted(new DateOnly(2030, 1, 1), new TimeOnly(9, 0))); // far future
+    }
+
+    // ---------- Task 6: maximum advance booking window ----------
+
+    [Fact]
+    public void IsBeyondMaxAdvanceWindow_PureFunction_DerivesCorrectly()
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        Assert.False(BookingService.IsBeyondMaxAdvanceWindow(today.AddDays(1)));
+        Assert.False(BookingService.IsBeyondMaxAdvanceWindow(today.AddDays(BookingService.MaxAdvanceBookingDays)));
+        Assert.True(BookingService.IsBeyondMaxAdvanceWindow(today.AddDays(BookingService.MaxAdvanceBookingDays + 1)));
+    }
+
+    [Fact]
+    public async Task Create_DateBeyondMaxAdvanceWindow_RejectsBeforeAvailabilityCheck_NoBookingRowCreated()
+    {
+        var capturedSql = new List<string>();
+        await using var context = CreateLoggingContext(capturedSql);
+        var controller = new BookingController(context);
+        var tooFarAhead = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(BookingService.MaxAdvanceBookingDays + 1);
+        var model = new CreateBookingViewModel
+        {
+            FacilityId = 3,
+            BookingDate = tooFarAhead,
+            StartTime = new TimeOnly(9, 0),
+            EndTime = new TimeOnly(10, 0)
+        };
+
+        var result = await controller.Create(model);
+
+        Assert.False(controller.ModelState.IsValid);
+        Assert.IsType<ViewResult>(result);
+        Assert.DoesNotContain(capturedSql, s => s.Contains("[Booking]"));
+        Assert.DoesNotContain(capturedSql, s => s.Contains("usp_CreateBooking"));
+
+        await using var verify = CreateContext();
+        var count = await verify.Bookings.CountAsync(b => b.FacilityId == 3 && b.BookingDate == tooFarAhead);
         Assert.Equal(0, count);
     }
 }

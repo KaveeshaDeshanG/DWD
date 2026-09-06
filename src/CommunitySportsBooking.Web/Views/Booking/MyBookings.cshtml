@@ -4,9 +4,9 @@
 }
 
 <div class="page-section">
-    <h1 class="h3 mb-4">My Bookings</h1>
+    <h1 class="h3 mb-4"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>My Bookings</h1>
 
-    <h2 class="h5">Upcoming</h2>
+    <h2 class="h5"><i class="bi bi-hourglass-split me-1 text-primary" aria-hidden="true"></i>Upcoming</h2>
     @if (!Model.UpcomingBookings.Any())
     {
         <div class="empty-state mb-4">
@@ -15,25 +15,44 @@
     }
     else
     {
-        <div class="table-responsive mb-4">
-            <table class="table table-hover align-middle bg-white">
-                <thead><tr><th>Facility</th><th>Type</th><th>Date</th><th>Time</th></tr></thead>
-                <tbody>
-                    @foreach (var b in Model.UpcomingBookings)
-                    {
-                        <tr>
-                            <td>@b.FacilityName</td>
-                            <td>@b.FacilityType</td>
-                            <td>@b.BookingDate.ToString("yyyy-MM-dd")</td>
-                            <td>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="booking-list mb-4">
+            @foreach (var b in Model.UpcomingBookings)
+            {
+                <div class="booking-item">
+                    <img src="@ImageResolver.GetFacilityImagePath(b.FacilityType)" alt="" />
+                    <div class="booking-item-info">
+                        <div class="fw-semibold">@b.FacilityName</div>
+                        <div class="small text-muted">@b.FacilityType · @b.Location</div>
+                    </div>
+                    <div class="booking-item-datetime">
+                        <div><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>@b.BookingDate.ToString("dd MMM yyyy")</div>
+                        <div><i class="bi bi-clock me-1" aria-hidden="true"></i>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</div>
+                    </div>
+                    <div class="booking-item-status">
+                        @if (b.CanCancel)
+                        {
+                            <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle mb-2">Upcoming</span>
+                            <form asp-controller="Booking" asp-action="Cancel" method="post"
+                                  onsubmit="return confirm('Cancel this booking? This cannot be undone.');">
+                                <input type="hidden" name="bookingId" value="@b.BookingId" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancel
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary-subtle text-secondary-emphasis border">
+                                <i class="bi bi-play-circle me-1" aria-hidden="true"></i>In Progress
+                            </span>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     }
 
-    <h2 class="h5">Completed</h2>
+    <h2 class="h5"><i class="bi bi-check2-circle me-1 text-primary" aria-hidden="true"></i>Completed</h2>
     @if (!Model.CompletedBookings.Any())
     {
         <div class="empty-state">
@@ -42,31 +61,35 @@
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle bg-white">
-                <thead><tr><th>Facility</th><th>Type</th><th>Date</th><th>Time</th><th>Review</th></tr></thead>
-                <tbody>
-                    @foreach (var b in Model.CompletedBookings)
-                    {
-                        <tr>
-                            <td>@b.FacilityName</td>
-                            <td>@b.FacilityType</td>
-                            <td>@b.BookingDate.ToString("yyyy-MM-dd")</td>
-                            <td>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</td>
-                            <td>
-                                @if (b.HasReview)
-                                {
-                                    <span class="text-muted">Reviewed</span>
-                                }
-                                else
-                                {
-                                    <a href="/Review/Create?bookingId=@b.BookingId">Leave a review</a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="booking-list">
+            @foreach (var b in Model.CompletedBookings)
+            {
+                <div class="booking-item">
+                    <img src="@ImageResolver.GetFacilityImagePath(b.FacilityType)" alt="" />
+                    <div class="booking-item-info">
+                        <div class="fw-semibold">@b.FacilityName</div>
+                        <div class="small text-muted">@b.FacilityType · @b.Location</div>
+                    </div>
+                    <div class="booking-item-datetime">
+                        <div><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>@b.BookingDate.ToString("dd MMM yyyy")</div>
+                        <div><i class="bi bi-clock me-1" aria-hidden="true"></i>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</div>
+                    </div>
+                    <div class="booking-item-status">
+                        @if (b.HasReview)
+                        {
+                            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">
+                                <i class="bi bi-star-fill me-1" aria-hidden="true"></i>Reviewed
+                            </span>
+                        }
+                        else
+                        {
+                            <a href="/Review/Create?bookingId=@b.BookingId" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-star me-1" aria-hidden="true"></i>Leave a Review
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     }
 </div>

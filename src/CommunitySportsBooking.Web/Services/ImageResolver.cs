@@ -15,6 +15,8 @@ public static class ImageResolver
         ["Football Pitch"] = "/images/facilities/football-pitch.svg",
         ["Athletics Track"] = "/images/facilities/athletics-track.svg",
         ["Badminton Court"] = "/images/facilities/badminton-court.svg",
+        ["Cricket Ground"] = "/images/facilities/cricket-ground.svg",
+        ["Volleyball Court"] = "/images/facilities/volleyball-court.svg",
     };
 
     private static readonly Dictionary<string, string> SportIconsByName = new(StringComparer.OrdinalIgnoreCase)
@@ -23,8 +25,10 @@ public static class ImageResolver
         ["Basketball"] = "/images/sports/basketball.svg",
         ["Swimming"] = "/images/sports/swimming.svg",
         ["Badminton"] = "/images/sports/badminton.svg",
-        ["Football"] = "/images/sports/football.svg",
+        ["Soccer"] = "/images/sports/soccer.svg",
         ["Athletics"] = "/images/sports/athletics.svg",
+        ["Cricket"] = "/images/sports/cricket.svg",
+        ["Volleyball"] = "/images/sports/volleyball.svg",
     };
 
     private const string DefaultFacilityImage = "/images/facilities/facility-default.svg";

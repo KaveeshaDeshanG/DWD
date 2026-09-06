@@ -2,6 +2,7 @@ using System.Diagnostics;
 using CommunitySportsBooking.Web.Data;
 using CommunitySportsBooking.Web.Models;
 using CommunitySportsBooking.Web.Models.ViewModels;
+using CommunitySportsBooking.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,15 +25,7 @@ public class HomeController : Controller
             .Where(f => f.IsActive)
             .OrderBy(f => f.FacilityName)
             .Take(3)
-            .Select(f => new FacilitySummaryViewModel
-            {
-                FacilityId = f.FacilityId,
-                FacilityName = f.FacilityName,
-                FacilityType = f.FacilityType,
-                Location = f.Location,
-                City = f.City,
-                Description = f.Description
-            })
+            .Select(FacilityProjections.ToSummary())
             .ToListAsync();
 
         var popularSports = await _context.Sports

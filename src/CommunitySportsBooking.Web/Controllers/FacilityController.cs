@@ -23,16 +23,7 @@ public class FacilityController : Controller
         var facilities = await _context.Facilities
             .Where(f => f.IsActive)
             .OrderBy(f => f.FacilityName)
-            .Select(f => new FacilitySummaryViewModel
-            {
-                FacilityId = f.FacilityId,
-                FacilityName = f.FacilityName,
-                FacilityType = f.FacilityType,
-                Location = f.Location,
-                City = f.City,
-                Description = f.Description,
-                IsAvailableForRequestedWindow = null
-            })
+            .Select(FacilityProjections.ToSummary())
             .ToListAsync();
 
         return View(facilities);
@@ -66,6 +57,8 @@ public class FacilityController : Controller
         {
             return NotFound();
         }
+
+        facility.Reviews = await ReviewService.GetFacilityReviewsAsync(_context, id);
 
         return View(facility);
     }
@@ -106,9 +99,19 @@ public class FacilityController : Controller
         }
 
         // FR-011: reject past date / Start >= End before running any query.
-        if (model.BookingDate is { } date && date < DateOnly.FromDateTime(DateTime.UtcNow))
+        // Shares BookingService.MaxAdvanceBookingDays with BookingController.Create
+        // (Task 6) so a Member can never search a window they could not then book.
+        if (model.BookingDate is { } date)
         {
-            ModelState.AddModelError(nameof(model.BookingDate), "Date cannot be in the past.");
+            if (date < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                ModelState.AddModelError(nameof(model.BookingDate), "Date cannot be in the past.");
+            }
+            else if (BookingService.IsBeyondMaxAdvanceWindow(date))
+            {
+                ModelState.AddModelError(nameof(model.BookingDate),
+                    $"You can only search up to {BookingService.MaxAdvanceBookingDays} days in advance.");
+            }
         }
 
         var hasStart = model.StartTime.HasValue;
@@ -132,7 +135,18 @@ public class FacilityController : Controller
 
         if (!string.IsNullOrWhiteSpace(model.FacilityType))
         {
-            query = query.Where(f => f.FacilityType.Contains(model.FacilityType));
+            // Matches either the venue's own FacilityType text ("Sports
+            // Hall") or a sport it supports via FacilitySport ("Basketball").
+            // Without the second clause, searching/clicking a sport whose
+            // name isn't literally part of the venue's type name (Basketball
+            // -> "Sports Hall", Soccer -> "Football Pitch", Cricket/
+            // Volleyball -> their secondary multi-use venues) silently
+            // returned zero results — found by actually running a search for
+            // each of the 8 sports, not by reading the code.
+            var typeFilter = model.FacilityType;
+            query = query.Where(f =>
+                f.FacilityType.Contains(typeFilter) ||
+                f.FacilitySports.Any(fs => fs.Sport.SportName.Contains(typeFilter)));
         }
 
         if (!string.IsNullOrWhiteSpace(model.Location))
@@ -142,15 +156,7 @@ public class FacilityController : Controller
 
         var matches = await query
             .OrderBy(f => f.FacilityName)
-            .Select(f => new FacilitySummaryViewModel
-            {
-                FacilityId = f.FacilityId,
-                FacilityName = f.FacilityName,
-                FacilityType = f.FacilityType,
-                Location = f.Location,
-                City = f.City,
-                Description = f.Description
-            })
+            .Select(FacilityProjections.ToSummary())
             .ToListAsync();
 
         // FR-005/FR-006: when a window was supplied (Member only — Guests

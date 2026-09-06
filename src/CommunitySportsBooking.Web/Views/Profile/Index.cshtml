@@ -1,83 +1,90 @@
 @model ProfileViewModel
 @{
     ViewData["Title"] = "My Profile";
+    var initials = $"{(Model.FirstName.Length > 0 ? Model.FirstName[0] : ' ')}{(Model.LastName.Length > 0 ? Model.LastName[0] : ' ')}".Trim().ToUpperInvariant();
 }
 
 <div class="page-section">
-    <h1 class="h3 mb-4">My Profile</h1>
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="profile-avatar" aria-hidden="true">@initials</div>
+        <div>
+            <h1 class="h3 mb-0">@Model.FirstName @Model.LastName</h1>
+            <p class="text-muted mb-0 small"><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Member since @Model.RegisteredDate.ToString("MMMM yyyy")</p>
+        </div>
+    </div>
 
     <div class="row mb-4">
-        <div class="col-md-6">
-            <h2 class="h5">Personal Information</h2>
+        <div class="col-lg-7">
+            <div class="form-section-title"><i class="bi bi-person-badge" aria-hidden="true"></i> Personal Information</div>
             <div class="form-card">
-                <form asp-controller="Profile" asp-action="Edit" method="post">
-                    <div asp-validation-summary="All" class="text-danger"></div>
+                <form asp-controller="Profile" asp-action="Edit" method="post" novalidate>
+                    <div asp-validation-summary="All"></div>
 
-                    <div class="form-group mb-3">
+                    <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="text" class="form-control" value="@Model.Email" disabled readonly />
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" value="@Model.Email" disabled readonly />
+                        </div>
                         <div class="form-text">Email cannot be changed.</div>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="FirstName" class="form-label"></label>
-                        <input asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="City" class="form-label"></label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="AddressLine" class="form-label"></label>
+                            <input asp-for="AddressLine" class="form-control" />
+                            <span asp-validation-for="AddressLine" class="text-danger"></span>
+                        </div>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label asp-for="LastName" class="form-label"></label>
-                        <input asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="Phone" class="form-label"></label>
-                        <input asp-for="Phone" class="form-control" />
-                        <span asp-validation-for="Phone" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="AddressLine" class="form-label"></label>
-                        <input asp-for="AddressLine" class="form-control" />
-                        <span asp-validation-for="AddressLine" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label asp-for="City" class="form-label"></label>
-                        <input asp-for="City" class="form-control" />
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-check2 me-1" aria-hidden="true"></i>Save Changes</button>
                 </form>
             </div>
         </div>
     </div>
 
     <div class="row" id="sports-preferences">
-        <div class="col-md-6">
-            <h2 class="h5">Preferred Sports</h2>
+        <div class="col-lg-7">
+            <div class="form-section-title"><i class="bi bi-trophy" aria-hidden="true"></i> Preferred Sports</div>
             <div class="form-card">
                 <form asp-controller="Profile" asp-action="Sports" method="post">
-                    <div class="row row-cols-2 g-2 mb-2">
+                    <div class="sport-chip-group mb-3">
                         @foreach (var sport in Model.AvailableSports)
                         {
-                            <div class="col">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="SelectedSportIds" value="@sport.SportId" id="pref-sport-@sport.SportId" checked="@sport.IsSelected" />
-                                    <label class="form-check-label" for="pref-sport-@sport.SportId">@sport.SportName</label>
-                                </div>
-                            </div>
+                            var icon = ImageResolver.GetSportIconPath(sport.SportName);
+                            <input type="checkbox" class="btn-check" name="SelectedSportIds" value="@sport.SportId" id="pref-sport-@sport.SportId" checked="@sport.IsSelected" autocomplete="off" />
+                            <label class="btn btn-outline-secondary sport-chip" for="pref-sport-@sport.SportId">
+                                @if (icon is not null)
+                                {
+                                    <img src="@icon" alt="" />
+                                }
+                                @sport.SportName
+                            </label>
                         }
                     </div>
-                    <button type="submit" class="btn btn-secondary">Update Preferences</button>
+                    <button type="submit" class="btn btn-secondary"><i class="bi bi-check2 me-1" aria-hidden="true"></i>Update Preferences</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-}

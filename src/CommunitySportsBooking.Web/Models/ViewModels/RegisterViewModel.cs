@@ -35,6 +35,11 @@ public class RegisterViewModel
     [Display(Name = "Password")]
     public string Password { get; set; } = string.Empty;
 
+    [Required, DataType(DataType.Password)]
+    [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+    [Display(Name = "Confirm Password")]
+    public string ConfirmPassword { get; set; } = string.Empty;
+
     public List<int> SelectedSportIds { get; set; } = new();
 
     // Populated by the controller before rendering the GET view; not bound on POST.

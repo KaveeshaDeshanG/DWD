@@ -1,14 +1,15 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Something went wrong";
 }
 
 <div class="empty-state my-5">
+    <i class="bi bi-exclamation-triangle fs-1 text-muted d-block mb-3" aria-hidden="true"></i>
     <h1 class="h2">Something went wrong</h1>
     <p>We hit a problem processing your request. Nothing was saved, and this wasn't caused by anything you did.</p>
     @if (Model.ShowRequestId)
     {
         <p class="small text-muted">Reference: <code>@Model.RequestId</code></p>
     }
-    <a href="/" class="btn btn-primary">Return home</a>
+    <a href="/" class="btn btn-primary"><i class="bi bi-house-door me-1" aria-hidden="true"></i>Return home</a>
 </div>

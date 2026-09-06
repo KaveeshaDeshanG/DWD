@@ -2,6 +2,7 @@ using CommunitySportsBooking.Web.Data;
 using CommunitySportsBooking.Web.Models.Entities;
 using CommunitySportsBooking.Web.Tools;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,29 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
+        // Applies only when AuthenticationProperties.IsPersistent is true
+        // (Login's "Remember me" checkbox) — an unchecked login still issues
+        // a session-only cookie regardless of this value.
+        options.ExpireTimeSpan = TimeSpan.FromDays(14);
+        options.SlidingExpiration = true;
+
+        // Task 4: explicit cookie hardening — these already matched the
+        // CookieBuilder defaults, but are set explicitly so the security
+        // posture is a deliberate decision recorded in code, not an
+        // unstated assumption about framework defaults.
+        options.Cookie.HttpOnly = true; // blocks any client-side script from reading the auth cookie via document.cookie
+        options.Cookie.SameSite = SameSiteMode.Lax; // sent on normal top-level navigation (e.g. following the LoginPath redirect) but withheld from cross-site requests; CSRF itself is defended primarily by [ValidateAntiForgeryToken] on every state-changing POST, so Lax (not the more disruptive Strict) is the standard, compatible choice for a same-site app like this one
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            // Properties/launchSettings.json's "http" profile runs the app on
+            // plain http://localhost with no TLS — Always here would make the
+            // browser silently discard the auth cookie on that profile
+            // (browsers never send a Secure cookie back over an insecure
+            // connection), breaking local login for no local-only benefit.
+            ? CookieSecurePolicy.SameAsRequest
+            // In every non-Development environment the app already enforces
+            // HTTPS via UseHttpsRedirection/UseHsts below, so the cookie must
+            // never be sent over a connection that was ever downgraded to HTTP.
+            : CookieSecurePolicy.Always;
     });
 
 builder.Services.AddSingleton<IPasswordHasher<Member>, PasswordHasher<Member>>();
