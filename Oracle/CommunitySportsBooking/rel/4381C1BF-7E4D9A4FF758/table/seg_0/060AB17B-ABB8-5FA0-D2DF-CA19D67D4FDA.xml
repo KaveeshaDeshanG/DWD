@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="060AB17B-ABB8-5FA0-D2DF-CA19D67D4FDA" name="Sport">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>E1785A3D-8522-998F-A2C6-6BF955E77305</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<abbreviation>Sport</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SportId" id="0B88C386-B6BF-DF7F-50B7-2F55F8FFE5FA">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>56611C3C-33DD-44D5-F4DB-99958E7E25DF</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SportName" id="AF8E050F-241F-1A16-22B4-968A39E42EF5">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>317EAD94-C9E8-0D93-1886-58A071CA1675</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C69FE102-96D8-5D4A-23BE-55741D4304BD" name="Sport_PK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>4722044B-098D-E6E5-1CA9-77EF8534D0E3</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0B88C386-B6BF-DF7F-50B7-2F55F8FFE5FA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

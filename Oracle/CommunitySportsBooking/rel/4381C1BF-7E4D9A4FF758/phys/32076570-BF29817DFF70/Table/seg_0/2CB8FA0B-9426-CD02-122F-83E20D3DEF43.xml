@@ -1,0 +1,48 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="Facility_and_FacilitySport" directorySegmentName="seg_0" id="2CB8FA0B-9426-CD02-122F-83E20D3DEF43">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="Facility_FacilityId" id="793399F6-4A1F-5395-361C-B22B10E4CFB8">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="FacilitySport_FacilityId" id="B20BE014-8317-8A59-94BF-43DD308CE233">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="FacilitySport_SportId" id="E4EA1199-514B-277C-F5DF-B1BB130C6E57">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="Facility_and_FacilitySport_Facility_FK" id="7A88CC5E-03AC-AABC-FAF6-B7BF7A01303E">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="Facility_and_FacilitySport_FacilitySport_FK" id="C57CEE1A-355A-D4D4-1940-EB0C8102023E">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="Facility_and_FacilitySport_PK" id="93784C90-F5BE-F868-EC88-67DF71904C1F">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

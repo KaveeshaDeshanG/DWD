@@ -1,0 +1,91 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="749AC3F6-2157-B107-43F3-9C49C4CD727C" name="Sport_and_MemberSport">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Sport_SportId" id="7C24A0AB-85A9-DD16-8FCD-D42BB836C422">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0B5357D4-3CAC-D805-6E80-D1D3E473AB28" referredColumn="0B88C386-B6BF-DF7F-50B7-2F55F8FFE5FA"/>
+</associations>
+</Column>
+<Column name="MemberSport_MemberId" id="25BC3995-46EC-D791-3321-1CD36310ACEC">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E8E3B3E3-5A09-0441-5055-C1391C227553" referredColumn="9AEA5B27-7220-9174-84ED-7EE1A184C4D3"/>
+</associations>
+</Column>
+<Column name="MemberSport_SportId" id="2336A9E0-AE10-13EB-8DD1-4ADE683A4683">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E8E3B3E3-5A09-0441-5055-C1391C227553" referredColumn="60B42011-935A-62C4-DDDD-1B15B794A5D3"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C07203B4-A601-3B03-712B-15960C5A8CA7" name="Sport_and_MemberSport_PK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7C24A0AB-85A9-DD16-8FCD-D42BB836C422"/>
+<colUsage columnID="25BC3995-46EC-D791-3321-1CD36310ACEC"/>
+<colUsage columnID="2336A9E0-AE10-13EB-8DD1-4ADE683A4683"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="EC3844C4-AEC4-0517-56B4-546DB2BB3030" name="Sport_and_MemberSport_Sport_FK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>36AB58E0-583C-1977-FC2E-43422B81F4D0</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7C24A0AB-85A9-DD16-8FCD-D42BB836C422"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="DF6DA38E-318E-6664-AC54-59ABC23E97E9" name="Sport_and_MemberSport_MemberSport_FK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>36AB58E0-583C-1977-FC2E-43422B81F4D0</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="25BC3995-46EC-D791-3321-1CD36310ACEC"/>
+<colUsage columnID="2336A9E0-AE10-13EB-8DD1-4ADE683A4683"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

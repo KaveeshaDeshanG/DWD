@@ -1,0 +1,71 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="Member" directorySegmentName="seg_0" id="562FBA0F-34B0-4BD6-5752-290BB1F4C27F">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="City" id="2220EFF6-6399-91B2-8EF5-384BB8EC3C22">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="LastName" id="422785F6-8B36-B526-C612-35B1CBFD76F9">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="Email" id="5C5DC9A7-3FDD-9441-DB66-67F1A788A500">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="Phone" id="5E5ED3FE-8425-FB88-80EB-61C35D160048">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="AddressLine" id="6EFED799-89FF-E404-44C3-2C780CB3F553">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PasswordHash" id="8727FA43-0F4B-3731-822A-B490DD2899C1">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="RegisteredDate" id="91F46996-9BD0-63AB-3CB9-00BD421F2CB9">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="FirstName" id="A298975E-D0EE-B4B8-3B8B-D85523670C74">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="IsActive" id="A8B2AD95-D389-70D9-C01C-2F803CC01FAF">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="MemberId" id="EC033D42-5640-1D8E-4D5E-66DEB0688156">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="Member_PK" id="9E2B9375-6114-0CB7-B569-B26E7AF503BA">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

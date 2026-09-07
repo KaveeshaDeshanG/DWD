@@ -1,0 +1,50 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="C028CBF0-8B76-3B96-305E-136F89F2CB91" name="FacilitySport">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>AE5AF84C-4B25-8073-452F-3E9F83522BFA</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<abbreviation>FS</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="FacilityId" id="5E623CF2-A0DC-B002-8ED0-C4ECE4B1C40B">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>3AA86CC6-9B97-B529-FD53-4A82DF919831</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SportId" id="C0A779B7-360D-57B8-334C-BE28571BD9A5">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>2BC9939C-6000-982F-3D62-C77D53396D1B</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4F586197-D877-6175-325C-78CFF4B6C4F5" name="FacilitySport_PK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>677697F0-2591-060F-3363-99A80C5A23EF</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5E623CF2-A0DC-B002-8ED0-C4ECE4B1C40B"/>
+<colUsage columnID="C0A779B7-360D-57B8-334C-BE28571BD9A5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

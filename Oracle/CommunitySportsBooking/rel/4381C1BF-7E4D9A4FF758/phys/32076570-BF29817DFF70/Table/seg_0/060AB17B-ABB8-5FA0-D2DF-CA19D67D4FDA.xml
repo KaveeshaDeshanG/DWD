@@ -1,0 +1,31 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="Sport" directorySegmentName="seg_0" id="060AB17B-ABB8-5FA0-D2DF-CA19D67D4FDA">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="SportId" id="0B88C386-B6BF-DF7F-50B7-2F55F8FFE5FA">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SportName" id="AF8E050F-241F-1A16-22B4-968A39E42EF5">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="Sport_PK" id="C69FE102-96D8-5D4A-23BE-55741D4304BD">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:51:55 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

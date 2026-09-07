@@ -1,0 +1,110 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="84C50046-5063-8E03-5AEF-76F53A9E9612" name="Booking">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>D999C26F-497A-970F-B874-393216422195</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<abbreviation>Booking</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="BookingId" id="4E7331C7-4D97-2CC1-C4EA-B2F361AD960E">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>B9025884-7396-DEAE-F346-6EB111460ADD</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MemberId" id="C0D3CD67-9997-E0D6-9759-CDA46E6026F5">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>ACBF7AB5-CF54-8765-997B-AD002CB167E2</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="FacilityId" id="F736AE74-F441-0151-7290-302BB2C92005">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>C953CC24-9978-AF06-9B77-90C48359F4E9</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BookingDate" id="AC6EBDC2-3056-2728-884C-E34DF9915D3E">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>EEDAA948-FE12-5A95-B0BB-8D9CB64E9401</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StartTime" id="A3AF9405-067B-5005-12E6-E065D7B82520">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>270D2B41-6B49-6624-B40A-8860D469157D</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT014</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="EndTime" id="943E238F-8259-A5C8-A749-8BA040829255">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>F0599EEE-9CC3-3BAC-055F-108A5539ADCF</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT014</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CreatedDate" id="2628F3D6-7D79-6AFF-F9B4-8E492439A423">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>AE819954-5D93-D406-560E-69F49E0F6A1E</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="DA509340-B059-2B8B-2B77-32E9AD528063" name="Booking_PK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>EC0B47A1-03C1-EF04-13CD-BDE70F0AAB83</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4E7331C7-4D97-2CC1-C4EA-B2F361AD960E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

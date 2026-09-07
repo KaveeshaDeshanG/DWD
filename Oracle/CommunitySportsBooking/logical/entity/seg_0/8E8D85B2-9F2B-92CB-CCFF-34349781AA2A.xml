@@ -1,0 +1,171 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8E8D85B2-9F2B-92CB-CCFF-34349781AA2A" name="Member">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 17:58:33 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<shortName>Member</shortName>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="MemberId" id="98D51230-D874-3D62-8233-9F8BF1F1E791">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:03:51 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FirstName" id="95C12F48-568B-F9D7-1D19-183CB060683E">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:07:14 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="LastName" id="DE549BDB-EFC7-FCBE-4AA8-2EA545AB33C7">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:07:44 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Email" id="32583417-091B-3CDE-55D0-887252BE5DF0">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:08:19 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>256</dataTypeSize>
+<ownDataTypeParameters>256,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Phone" id="C20BB4A5-F42B-E0DE-D0FB-FFBFE521A866">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:08:41 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20</dataTypeSize>
+<ownDataTypeParameters>20,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="AddressLine" id="1172E22B-08A6-EB51-CD56-F4856EBD5A2A">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:09:01 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>200</dataTypeSize>
+<ownDataTypeParameters>200,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="City" id="E3678E67-534F-F209-7089-6EEBFF3E5599">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:09:30 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PasswordHash" id="79B8453C-B4F6-7ABA-784B-8D02C7BE8AAA">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:10:56 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4000</dataTypeSize>
+<ownDataTypeParameters>4000,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="RegisteredDate" id="D6E144A4-D1AB-06DB-3A6D-F4D0288246B5">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:11:18 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="IsActive" id="6166492F-CA90-5208-B36F-78D357EFBBD8">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:11:56 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>1</dataTypePrecision>
+<ownDataTypeParameters>,1,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="53B061CD-7E5D-9A8B-3814-59B2826537CE" name="Member PK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:04:32 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>98D51230-D874-3D62-8233-9F8BF1F1E791</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

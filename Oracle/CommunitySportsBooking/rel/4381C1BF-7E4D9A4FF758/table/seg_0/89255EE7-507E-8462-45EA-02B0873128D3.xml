@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="89255EE7-507E-8462-45EA-02B0873128D3" name="Facility_and_Booking">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Facility_FacilityId" id="E294C3E5-0D85-CDAE-DC8B-F0122FF7BBBF">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B134F6E2-4E52-2C6B-4C80-1DEDFFD87519" referredColumn="4ADF4522-884B-B5AE-8D97-02E5BFAE5BC4"/>
+</associations>
+</Column>
+<Column name="Member_MemberId" id="2BC56614-7CFC-4F9F-63E0-08C375C2C717">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3C98420D-4B57-0079-87A2-E8F59637A1F0" referredColumn="EC033D42-5640-1D8E-4D5E-66DEB0688156"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="2138A7FD-D841-92BA-36B2-5346C8671987" name="Facility_and_Booking_PK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E294C3E5-0D85-CDAE-DC8B-F0122FF7BBBF"/>
+<colUsage columnID="2BC56614-7CFC-4F9F-63E0-08C375C2C717"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F9FB8F68-34A7-C15F-84E6-CD3BBEF1B418" name="Facility_and_Booking_Facility_FK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>82A0345C-12C3-0F8E-76BE-966D579773A7</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E294C3E5-0D85-CDAE-DC8B-F0122FF7BBBF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CA0D90EC-7D3E-0A06-ECAD-F46F921591E2" name="Facility_and_Booking_Member_FK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<generatorID>82A0345C-12C3-0F8E-76BE-966D579773A7</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="2BC56614-7CFC-4F9F-63E0-08C375C2C717"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

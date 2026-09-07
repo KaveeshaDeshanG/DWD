@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="CommunitySportsBooking" id="5F96F99E-348D-FCEA-81DA-165D8C4A42D4" version="3.5">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 17:38:26 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>5F96F99E-348D-FCEA-81DA-165D8C4A42D4</designId>
+</OSDM_Design>

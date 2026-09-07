@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Facility and FacilitySport" directorySegmentName="seg_0" id="BEE10F95-0614-C2DC-811B-7A2BFE07786A">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-07 18:41:45 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>F35B455D-8A27-3E47-5169-B6B680CC9BC3</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>AE5AF84C-4B25-8073-452F-3E9F83522BFA</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
