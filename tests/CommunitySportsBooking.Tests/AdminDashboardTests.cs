@@ -49,17 +49,24 @@ public class AdminDashboardTests
         Assert.Equal(await verify.Reviews.CountAsync(), model.TotalReviews);
         Assert.Equal(await verify.Inquiries.CountAsync(i => i.Status == "New"), model.NewInquiries);
 
-        // Upcoming/Completed re-derived independently via the same pure
-        // function the controller uses (BookingService.IsCompleted) — proves
-        // the split is correct, not just that the two halves sum to the
-        // total (which would be true even if the split logic were wrong).
+        // Upcoming/Completed/Cancelled re-derived independently via the same
+        // shared function the controller uses (BookingService.
+        // GetEffectiveStatus) — proves the three-way split is correct, not
+        // just that the buckets sum to the total (which would be true even
+        // if the split logic were wrong). Must use GetEffectiveStatus, not
+        // IsCompleted alone: a cancelled booking is never Upcoming or
+        // Completed regardless of its date/time (database/
+        // 08_BookingCancellation.sql).
         var bookingWindows = await verify.Bookings
-            .Select(b => new { b.BookingDate, b.EndTime })
+            .Select(b => new { b.BookingDate, b.EndTime, b.IsCancelled })
             .ToListAsync();
-        var expectedCompleted = bookingWindows.Count(b => BookingService.IsCompleted(b.BookingDate, b.EndTime));
+        var expectedStatuses = bookingWindows
+            .Select(b => BookingService.GetEffectiveStatus(b.IsCancelled, b.BookingDate, b.EndTime))
+            .ToList();
 
         Assert.Equal(bookingWindows.Count, model.TotalBookings);
-        Assert.Equal(expectedCompleted, model.CompletedBookings);
-        Assert.Equal(bookingWindows.Count - expectedCompleted, model.UpcomingBookings);
+        Assert.Equal(expectedStatuses.Count(s => s == BookingService.BookingStatus.Upcoming), model.UpcomingBookings);
+        Assert.Equal(expectedStatuses.Count(s => s == BookingService.BookingStatus.Completed), model.CompletedBookings);
+        Assert.Equal(expectedStatuses.Count(s => s == BookingService.BookingStatus.Cancelled), model.CancelledBookings);
     }
 }

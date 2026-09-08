@@ -1,12 +1,6 @@
 @{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
 
-    // Every module below is planned for a later phase (Phase 3+) except
-    // Dashboard, which already exists. Their links point at the real,
-    // intended URL rather than "#" — until each controller is built,
-    // clicking one reaches the app's own existing branded 404 page
-    // (Program.cs's UseStatusCodePagesWithReExecute), not a fake page
-    // pretending to be that feature.
     (string Controller, string Icon, string Label)[] navItems =
     {
         ("Dashboard", "bi-speedometer2", "Dashboard"),
@@ -30,7 +24,7 @@
                 var isActive = string.Equals(currentController, item.Controller, StringComparison.OrdinalIgnoreCase);
                 <a class="admin-nav-link @(isActive ? "active" : "")"
                    aria-current="@(isActive ? "page" : null)"
-                   href="/Admin/@item.Controller">
+                   asp-area="Admin" asp-controller="@item.Controller" asp-action="Index">
                     <i class="bi @item.Icon me-2" aria-hidden="true"></i>@item.Label
                 </a>
             }
