@@ -1,0 +1,111 @@
+@model AdminBookingDetailsViewModel
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Bookings</a>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h2 class="mb-0">
+            Booking #@Model.BookingId
+            @switch (Model.Status)
+            {
+                case BookingService.BookingStatus.Cancelled:
+                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle">Cancelled</span>
+                    break;
+                case BookingService.BookingStatus.Completed:
+                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Completed</span>
+                    break;
+                default:
+                    if (Model.CanCancel)
+                    {
+                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle">Upcoming</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis border">In Progress</span>
+                    }
+                    break;
+            }
+        </h2>
+        @if (Model.CanCancel)
+        {
+            <form asp-action="Cancel" asp-route-id="@Model.BookingId" method="post"
+                  onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancel Booking
+                </button>
+            </form>
+        }
+        else
+        {
+            <button type="button" class="btn btn-outline-secondary btn-sm" disabled
+                    title="@(Model.Status == BookingService.BookingStatus.Cancelled ? "This booking has already been cancelled." : "This booking has already started or been completed and cannot be cancelled.")">
+                <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancel Booking
+            </button>
+        }
+    </div>
+    @if (Model.Status == BookingService.BookingStatus.Cancelled && Model.CancelledDate.HasValue)
+    {
+        <p class="text-muted small mt-2 mb-0">
+            <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+            Cancelled on @Model.CancelledDate.Value.ToString("dd MMM yyyy HH:mm").
+        </p>
+    }
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="form-card h-100">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-person me-1" aria-hidden="true"></i>Member</h3>
+            <div class="mb-2"><strong>@Model.MemberName</strong></div>
+            <div class="small text-muted mb-1">@Model.MemberEmail</div>
+            <div class="small text-muted mb-3">@Model.MemberPhone</div>
+            <a asp-controller="Members" asp-action="Details" asp-route-id="@Model.MemberId" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye me-1" aria-hidden="true"></i>View Member
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-card h-100">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-building me-1" aria-hidden="true"></i>Facility</h3>
+            <div class="mb-2"><strong>@Model.FacilityName</strong></div>
+            <div class="small text-muted mb-1">@Model.FacilityType</div>
+            <div class="small text-muted mb-3">@Model.FacilityLocation</div>
+            <a asp-controller="Facilities" asp-action="Details" asp-route-id="@Model.FacilityId" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye me-1" aria-hidden="true"></i>View Facility
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="page-section mt-4">
+    <div class="form-card">
+        <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-clock me-1" aria-hidden="true"></i>Date &amp; Time</h3>
+        <div class="row g-3">
+            <div class="col-sm-4">
+                <div class="small text-muted">Date</div>
+                <div>@Model.BookingDate.ToString("dd MMM yyyy")</div>
+            </div>
+            <div class="col-sm-4">
+                <div class="small text-muted">Time</div>
+                <div>@Model.StartTime.ToString("HH:mm")–@Model.EndTime.ToString("HH:mm")</div>
+            </div>
+            <div class="col-sm-4">
+                <div class="small text-muted">Booked On</div>
+                <div>@Model.CreatedDate.ToString("dd MMM yyyy HH:mm")</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ReviewRating.HasValue)
+{
+    <div class="page-section">
+        <h3 class="h5"><i class="bi bi-star me-1 text-primary" aria-hidden="true"></i>Review</h3>
+        <div class="review-card">
+            @await Html.PartialAsync("_StarRatingPartial", Model.ReviewRating.Value)
+            <p class="mb-0 mt-2">@Model.ReviewComment</p>
+        </div>
+    </div>
+}

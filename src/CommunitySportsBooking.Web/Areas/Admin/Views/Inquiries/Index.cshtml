@@ -1,0 +1,83 @@
+@model InquiryIndexViewModel
+@{
+    ViewData["Title"] = "Inquiries";
+}
+
+<div class="page-section">
+    <h2 class="mb-1"><i class="bi bi-envelope me-2" aria-hidden="true"></i>Inquiries</h2>
+    <p class="text-muted mb-0">@Model.Inquiries.Count inquir@(Model.Inquiries.Count == 1 ? "y" : "ies") matching the current filters.</p>
+</div>
+
+<div class="form-card mb-3">
+    <form asp-action="Index" method="get" class="row g-2 align-items-end">
+        <div class="col-sm-7 col-lg-6">
+            <label for="search" class="form-label">Search</label>
+            <input type="text" id="search" name="search" class="form-control" value="@Model.Search" placeholder="Name, email, or subject" />
+        </div>
+        <div class="col-sm-5 col-lg-3">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select">
+                <option value="" selected="@(string.IsNullOrEmpty(Model.Status))">All</option>
+                <option value="New" selected="@(Model.Status == "New")">New</option>
+                <option value="Reviewed" selected="@(Model.Status == "Reviewed")">Reviewed</option>
+                <option value="Closed" selected="@(Model.Status == "Closed")">Closed</option>
+            </select>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Clear</a>
+        </div>
+    </form>
+</div>
+
+@if (!Model.Inquiries.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-envelope fs-2 text-muted d-block mb-2" aria-hidden="true"></i>
+        <p class="mb-0">No inquiries matched your filters.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle bg-white">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inquiry in Model.Inquiries)
+                {
+                    <tr>
+                        <td>@inquiry.Name</td>
+                        <td>@inquiry.Email</td>
+                        <td>@inquiry.Subject</td>
+                        <td>@inquiry.InquiryDate.ToString("dd MMM yyyy")</td>
+                        <td>
+                            @{
+                                var badgeClass = inquiry.Status switch
+                                {
+                                    "New" => "bg-primary-subtle text-primary-emphasis border border-primary-subtle",
+                                    "Reviewed" => "bg-warning-subtle text-warning-emphasis border border-warning-subtle",
+                                    _ => "bg-success-subtle text-success-emphasis border border-success-subtle"
+                                };
+                            }
+                            <span class="badge @badgeClass">@inquiry.Status</span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@inquiry.InquiryId" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye me-1" aria-hidden="true"></i>View
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

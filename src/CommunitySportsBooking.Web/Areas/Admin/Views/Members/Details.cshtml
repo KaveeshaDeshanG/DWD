@@ -1,0 +1,148 @@
+@model MemberDetailsViewModel
+@{
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Members</a>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h2 class="mb-0">
+            @Model.FirstName @Model.LastName
+            @if (Model.IsAdmin)
+            {
+                <span class="badge bg-dark ms-1">Admin</span>
+            }
+            @if (Model.IsActive)
+            {
+                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Active</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary-subtle text-secondary-emphasis border">Inactive</span>
+            }
+        </h2>
+
+        @if (Model.IsCurrentAdmin)
+        {
+            <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="You cannot deactivate your own account.">
+                <i class="bi bi-shield-lock me-1" aria-hidden="true"></i>This is your account
+            </button>
+        }
+        else
+        {
+            <form asp-action="ToggleActive" asp-route-id="@Model.MemberId" method="post"
+                  onsubmit="return confirm('@(Model.IsActive ? "Deactivate" : "Activate") this member?');">
+                @if (Model.IsActive)
+                {
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-person-x me-1" aria-hidden="true"></i>Deactivate
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-person-check me-1" aria-hidden="true"></i>Activate
+                    </button>
+                }
+            </form>
+        }
+    </div>
+</div>
+
+<div class="form-card mb-4">
+    <div class="row g-3">
+        <div class="col-sm-6 col-lg-3">
+            <div class="small text-muted">Email</div>
+            <div>@Model.Email</div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="small text-muted">Phone</div>
+            <div>@Model.Phone</div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="small text-muted">Address</div>
+            <div>@Model.AddressLine, @Model.City</div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="small text-muted">Registered</div>
+            <div>@Model.RegisteredDate.ToString("dd MMM yyyy")</div>
+        </div>
+    </div>
+    @if (Model.PreferredSports.Any())
+    {
+        <div class="mt-3">
+            <div class="small text-muted mb-1">Preferred Sports</div>
+            <div class="sport-chip-group">
+                @foreach (var sport in Model.PreferredSports)
+                {
+                    <span class="btn btn-outline-secondary sport-chip disabled">@sport</span>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<div class="page-section">
+    <h3 class="h5"><i class="bi bi-calendar3 me-1 text-primary" aria-hidden="true"></i>Bookings (@Model.Bookings.Count)</h3>
+    @if (!Model.Bookings.Any())
+    {
+        <div class="empty-state">
+            <p class="mb-0">This member has no bookings.</p>
+        </div>
+    }
+    else
+    {
+        <div class="booking-list">
+            @foreach (var booking in Model.Bookings)
+            {
+                <div class="booking-item">
+                    <div class="booking-item-info">
+                        <div class="fw-semibold">@booking.FacilityName</div>
+                        <div class="small text-muted">@booking.FacilityType</div>
+                    </div>
+                    <div class="booking-item-datetime">
+                        <div><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>@booking.BookingDate.ToString("dd MMM yyyy")</div>
+                        <div><i class="bi bi-clock me-1" aria-hidden="true"></i>@booking.StartTime.ToString("HH:mm")–@booking.EndTime.ToString("HH:mm")</div>
+                    </div>
+                    <div class="booking-item-status">
+                        @if (booking.IsCompleted)
+                        {
+                            <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle">Upcoming</span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<div class="page-section">
+    <h3 class="h5"><i class="bi bi-star me-1 text-primary" aria-hidden="true"></i>Reviews (@Model.Reviews.Count)</h3>
+    @if (!Model.Reviews.Any())
+    {
+        <div class="empty-state">
+            <p class="mb-0">This member hasn't submitted any reviews.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="review-card">
+                <div class="review-meta">
+                    <div>
+                        <span class="review-facility">@review.FacilityName</span>
+                        <span class="text-muted small"> &middot; @review.FacilityType</span>
+                    </div>
+                    <span class="review-date">@review.ReviewDate.ToString("dd MMM yyyy")</span>
+                </div>
+                @await Html.PartialAsync("_StarRatingPartial", review.Rating)
+                <p class="mb-0 mt-2">@review.Comment</p>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,9 @@
+@{
+    // Areas do not inherit the main Views/_ViewStart.cshtml (it only applies
+    // within the Views/ folder tree), so the Admin area needs its own.
+    // Phase 2: _AdminLayout (its own header/sidebar shell) replaces the
+    // Phase 1 placeholder's reuse of the public site's _Layout — same
+    // Bootstrap/CSS tokens, different structure, since an admin panel needs
+    // a sidebar rather than the public top nav.
+    Layout = "_AdminLayout";
+}

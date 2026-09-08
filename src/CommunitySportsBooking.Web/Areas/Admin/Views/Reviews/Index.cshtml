@@ -1,0 +1,62 @@
+@model AdminReviewIndexViewModel
+@{
+    ViewData["Title"] = "Reviews";
+}
+
+<div class="page-section">
+    <h2 class="mb-1"><i class="bi bi-star me-2" aria-hidden="true"></i>Reviews</h2>
+    <p class="text-muted mb-0">@Model.Reviews.Count review@(Model.Reviews.Count == 1 ? "" : "s") matching the current filters.</p>
+</div>
+
+<div class="form-card mb-3">
+    <form asp-action="Index" method="get" class="row g-2 align-items-end">
+        <div class="col-sm-5 col-lg-4">
+            <label for="member" class="form-label">Member</label>
+            <input type="text" id="member" name="member" class="form-control" value="@Model.MemberSearch" placeholder="Name or email" />
+        </div>
+        <div class="col-sm-5 col-lg-4">
+            <label for="facility" class="form-label">Facility</label>
+            <input type="text" id="facility" name="facility" class="form-control" value="@Model.FacilitySearch" placeholder="Facility name" />
+        </div>
+        <div class="col-sm-2 col-lg-2">
+            <label for="rating" class="form-label">Rating</label>
+            <select id="rating" name="rating" class="form-select">
+                <option value="" selected="@(Model.Rating is null)">All</option>
+                @for (byte r = 5; r >= 1; r--)
+                {
+                    <option value="@r" selected="@(Model.Rating == r)">@r star@(r == 1 ? "" : "s")</option>
+                }
+            </select>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Clear</a>
+        </div>
+    </form>
+</div>
+
+@if (!Model.Reviews.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-star fs-2 text-muted d-block mb-2" aria-hidden="true"></i>
+        <p class="mb-0">No reviews matched your filters.</p>
+    </div>
+}
+else
+{
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="review-card">
+            <div class="review-meta">
+                <div>
+                    <span class="review-facility">@review.FacilityName</span>
+                    <span class="text-muted small"> &middot; @review.MemberName</span>
+                </div>
+                <span class="review-date">@review.ReviewDate.ToString("dd MMM yyyy")</span>
+            </div>
+            @await Html.PartialAsync("_StarRatingPartial", review.Rating)
+            <p class="mb-1 mt-2">@review.Comment</p>
+            <a asp-action="Details" asp-route-id="@review.BookingId" class="small">View details &rarr;</a>
+        </div>
+    }
+}

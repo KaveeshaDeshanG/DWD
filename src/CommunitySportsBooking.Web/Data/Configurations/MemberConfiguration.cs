@@ -13,5 +13,6 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
         builder.HasIndex(m => m.Email).IsUnique().HasDatabaseName("UQ_Member_Email");
         builder.Property(m => m.RegisteredDate).HasDefaultValueSql("SYSUTCDATETIME()");
         builder.Property(m => m.IsActive).HasDefaultValue(true);
+        builder.Property(m => m.IsAdmin).HasDefaultValue(false);
     }
 }

@@ -9,6 +9,8 @@ public class Booking
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
     public DateTime CreatedDate { get; set; }
+    public bool IsCancelled { get; set; }
+    public DateTime? CancelledDate { get; set; }
 
     public Member Member { get; set; } = null!;
     public Facility Facility { get; set; } = null!;

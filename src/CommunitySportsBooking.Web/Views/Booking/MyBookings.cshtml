@@ -92,4 +92,36 @@
             }
         </div>
     }
+
+    <h2 class="h5 mt-4"><i class="bi bi-x-circle me-1 text-primary" aria-hidden="true"></i>Cancelled</h2>
+    @if (!Model.CancelledBookings.Any())
+    {
+        <div class="empty-state">
+            <p class="mb-0">You have no cancelled bookings.</p>
+        </div>
+    }
+    else
+    {
+        <div class="booking-list">
+            @foreach (var b in Model.CancelledBookings)
+            {
+                <div class="booking-item">
+                    <img src="@ImageResolver.GetFacilityImagePath(b.FacilityType)" alt="" />
+                    <div class="booking-item-info">
+                        <div class="fw-semibold">@b.FacilityName</div>
+                        <div class="small text-muted">@b.FacilityType · @b.Location</div>
+                    </div>
+                    <div class="booking-item-datetime">
+                        <div><i class="bi bi-calendar3 me-1" aria-hidden="true"></i>@b.BookingDate.ToString("dd MMM yyyy")</div>
+                        <div><i class="bi bi-clock me-1" aria-hidden="true"></i>@b.StartTime.ToString("HH:mm")–@b.EndTime.ToString("HH:mm")</div>
+                    </div>
+                    <div class="booking-item-status">
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis border">
+                            <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancelled
+                        </span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>

@@ -722,17 +722,108 @@ public class BookingFunctionalityTests
         var bookingId = await InsertBookingDirectAsync(
             memberId: 1, facilityId: 2, date: new DateOnly(2026, 12, 1), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
 
-        await using var context = CreateContext();
-        var controller = CreateBookingController(context, memberId: 1);
+        try
+        {
+            await using var context = CreateContext();
+            var controller = CreateBookingController(context, memberId: 1);
 
-        var result = await controller.Cancel(bookingId);
+            var result = await controller.Cancel(bookingId);
 
-        var redirect = Assert.IsType<RedirectToActionResult>(result);
-        Assert.Equal(nameof(BookingController.MyBookings), redirect.ActionName);
-        Assert.Equal("Your booking has been cancelled.", controller.TempData["SuccessMessage"]);
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(BookingController.MyBookings), redirect.ActionName);
+            Assert.Equal("Your booking has been cancelled.", controller.TempData["SuccessMessage"]);
 
-        await using var verify = CreateContext();
-        Assert.Null(await verify.Bookings.FindAsync(bookingId)); // actually removed, not just flagged
+            // Soft-cancel (database/08_BookingCancellation.sql): the record
+            // stays in the database with IsCancelled/CancelledDate set,
+            // never removed — Admin needs the cancelled history preserved.
+            await using var verify = CreateContext();
+            var reloaded = await verify.Bookings.FindAsync(bookingId);
+            Assert.NotNull(reloaded);
+            Assert.True(reloaded!.IsCancelled);
+            Assert.NotNull(reloaded.CancelledDate);
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
+    }
+
+    [Fact]
+    public async Task Cancel_AlreadyCancelledBooking_IsRejected_CannotBeCancelledTwice()
+    {
+        var bookingId = await InsertBookingDirectAsync(
+            memberId: 1, facilityId: 2, date: new DateOnly(2026, 12, 3), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
+
+        try
+        {
+            await using var firstContext = CreateContext();
+            var firstController = CreateBookingController(firstContext, memberId: 1);
+            await firstController.Cancel(bookingId);
+
+            await using var context = CreateContext();
+            var controller = CreateBookingController(context, memberId: 1);
+
+            var result = await controller.Cancel(bookingId);
+
+            var redirect = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(nameof(BookingController.MyBookings), redirect.ActionName);
+            Assert.Equal("This booking has already been cancelled.", controller.TempData["ErrorMessage"]);
+
+            await using var verify = CreateContext();
+            Assert.True((await verify.Bookings.FindAsync(bookingId))!.IsCancelled);
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
+    }
+
+    [Fact]
+    public async Task MyBookings_CancelledBooking_AppearsInCancelledSection_NotUpcomingOrCompleted()
+    {
+        var bookingId = await InsertBookingDirectAsync(
+            memberId: 1, facilityId: 2, date: new DateOnly(2026, 12, 4), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
+
+        try
+        {
+            await using var cancelContext = CreateContext();
+            var cancelController = CreateBookingController(cancelContext, memberId: 1);
+            await cancelController.Cancel(bookingId);
+
+            await using var context = CreateContext();
+            var controller = CreateBookingController(context, memberId: 1);
+
+            var result = await controller.MyBookings();
+
+            var model = Assert.IsType<MyBookingsViewModel>(Assert.IsType<ViewResult>(result).Model);
+            Assert.Contains(model.CancelledBookings, b => b.BookingId == bookingId);
+            Assert.DoesNotContain(model.UpcomingBookings, b => b.BookingId == bookingId);
+            Assert.DoesNotContain(model.CompletedBookings, b => b.BookingId == bookingId);
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
+    }
+
+    [Fact]
+    public async Task NewlyInsertedBooking_DefaultsToNotCancelled()
+    {
+        var bookingId = await InsertBookingDirectAsync(
+            memberId: 1, facilityId: 2, date: new DateOnly(2026, 12, 5), start: new TimeOnly(9, 0), end: new TimeOnly(10, 0));
+
+        try
+        {
+            await using var verify = CreateContext();
+            var reloaded = await verify.Bookings.FindAsync(bookingId);
+            Assert.NotNull(reloaded);
+            Assert.False(reloaded!.IsCancelled);
+            Assert.Null(reloaded.CancelledDate);
+        }
+        finally
+        {
+            await DeleteBookingAsync(bookingId);
+        }
     }
 
     [Fact]

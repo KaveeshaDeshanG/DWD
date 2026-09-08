@@ -1,0 +1,118 @@
+@model FacilityDetailsViewModel
+@{
+    ViewData["Title"] = Model.FacilityName;
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Facilities</a>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h2 class="mb-0">
+            @Model.FacilityName
+            @if (Model.IsActive)
+            {
+                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Active</span>
+            }
+            else
+            {
+                <span class="badge bg-secondary-subtle text-secondary-emphasis border">Inactive</span>
+            }
+        </h2>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.FacilityId" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-pencil me-1" aria-hidden="true"></i>Edit
+            </a>
+            <form asp-action="ToggleActive" asp-route-id="@Model.FacilityId" method="post"
+                  onsubmit="return confirm('@(Model.IsActive ? "Deactivate" : "Activate") this facility?');">
+                @if (Model.IsActive)
+                {
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-toggle-off me-1" aria-hidden="true"></i>Deactivate
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-toggle-on me-1" aria-hidden="true"></i>Activate
+                    </button>
+                }
+            </form>
+            @if (Model.CanDelete)
+            {
+                <form asp-action="Delete" asp-route-id="@Model.FacilityId" method="post"
+                      onsubmit="return confirm('Delete &quot;@Model.FacilityName&quot;? This cannot be undone.');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                    </button>
+                </form>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled
+                        title="This facility has booking history and cannot be deleted.">
+                    <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                </button>
+            }
+        </div>
+    </div>
+    @if (!Model.CanDelete)
+    {
+        <p class="text-muted small mt-2 mb-0">
+            <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+            This facility has @Model.BookingCount booking record@(Model.BookingCount == 1 ? "" : "s") and can't be deleted — deactivate it instead to remove it from search and booking.
+        </p>
+    }
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-4">
+        <img src="@ImageResolver.GetFacilityImagePath(Model.FacilityType)" alt="" class="w-100 rounded-4" style="max-height:220px;object-fit:cover;" />
+    </div>
+    <div class="col-lg-8">
+        <div class="form-card h-100">
+            <div class="row g-3">
+                <div class="col-sm-6">
+                    <div class="small text-muted">Type</div>
+                    <div>@Model.FacilityType</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="small text-muted">Location</div>
+                    <div>@Model.Location</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="small text-muted">Address</div>
+                    <div>@Model.AddressLine, @Model.City</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="small text-muted">Capacity</div>
+                    <div>@(Model.Capacity?.ToString() ?? "Not specified")</div>
+                </div>
+                <div class="col-12">
+                    <div class="small text-muted">Description</div>
+                    <div>@(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="small text-muted">Bookings</div>
+                    <div>@Model.BookingCount</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-section">
+    <h3 class="h5"><i class="bi bi-trophy me-1 text-primary" aria-hidden="true"></i>Supported Sports</h3>
+    <div class="form-card">
+        <form asp-action="Sports" asp-route-id="@Model.FacilityId" method="post">
+            <div class="sport-chip-group mb-3">
+                @foreach (var sport in Model.SportOptions)
+                {
+                    <input type="checkbox" class="btn-check" name="selectedSportIds" value="@sport.SportId" id="facility-sport-@sport.SportId" checked="@sport.IsSelected" autocomplete="off" />
+                    <label class="btn btn-outline-secondary sport-chip" for="facility-sport-@sport.SportId">
+                        @sport.SportName
+                    </label>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-check2 me-1" aria-hidden="true"></i>Save Sports</button>
+        </form>
+    </div>
+</div>

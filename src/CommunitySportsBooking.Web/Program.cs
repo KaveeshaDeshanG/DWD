@@ -1,3 +1,4 @@
+using CommunitySportsBooking.Web.Authorization;
 using CommunitySportsBooking.Web.Data;
 using CommunitySportsBooking.Web.Models.Entities;
 using CommunitySportsBooking.Web.Tools;
@@ -24,6 +25,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
+        // Admin Panel: where a signed-in Member without the Admin claim is
+        // sent when the AdminOnly policy below rejects them (a Forbid, not a
+        // Challenge — they're already authenticated, just not authorized).
+        // This already matched the framework default; set explicitly so it's
+        // a deliberate decision recorded in code, same reasoning as every
+        // other option set explicitly in this block.
+        options.AccessDeniedPath = "/Account/AccessDenied";
         // Applies only when AuthenticationProperties.IsPersistent is true
         // (Login's "Remember me" checkbox) — an unchecked login still issues
         // a session-only cookie regardless of this value.
@@ -50,6 +58,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddSingleton<IPasswordHasher<Member>, PasswordHasher<Member>>();
+
+// Admin Panel authorization: a Member only ever holds this claim when
+// Member.IsAdmin is true (AccountController.SignInMemberAsync) — no
+// AspNetRoles table, no ASP.NET Core Identity, matching the rest of this
+// app's custom-auth approach. Every Admin-area controller requires this
+// policy (Areas/Admin/Controllers/AdminControllerBase). Policy body lives in
+// AdminPolicies so AdminFunctionalityTests can exercise the exact same
+// policy, not a reimplementation of it.
+builder.Services.AddAuthorization(AdminPolicies.Configure);
 
 var app = builder.Build();
 
@@ -78,6 +95,16 @@ if (args.Contains("--update-seed-hashes"))
     return;
 }
 
+// One-time management command: `dotnet run -- --seed-admin-account` ensures
+// the dedicated Admin login (Email "admin", Password "admin") exists with a
+// real PasswordHasher<Member> hash (see Tools/AdminAccountSeeder.cs), then
+// exits without starting the web server. Never runs on normal startup.
+if (args.Contains("--seed-admin-account"))
+{
+    await AdminAccountSeeder.RunAsync(app.Services);
+    return;
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -99,6 +126,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+// Admin Panel: must be mapped before "default" so an /Admin/... URL resolves
+// to Areas/Admin/Controllers rather than falling through to the main
+// {controller}/{action} route (which has no "Admin" controller anyway, but
+// route-matching order is still the correct, standard way to add an area).
+app.MapControllerRoute(
+    name: "admin-area",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}")
+    .WithStaticAssets();
 
 app.MapControllerRoute(
     name: "default",

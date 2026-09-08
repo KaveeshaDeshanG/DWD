@@ -1,0 +1,120 @@
+@model AdminBookingIndexViewModel
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<div class="page-section">
+    <h2 class="mb-1"><i class="bi bi-calendar3 me-2" aria-hidden="true"></i>Bookings</h2>
+    <p class="text-muted mb-0">@Model.Bookings.Count booking@(Model.Bookings.Count == 1 ? "" : "s") matching the current filters.</p>
+</div>
+
+<div class="form-card mb-3">
+    <form asp-action="Index" method="get" class="row g-2 align-items-end">
+        <div class="col-sm-6 col-lg-3">
+            <label for="member" class="form-label">Member</label>
+            <input type="text" id="member" name="member" class="form-control" value="@Model.MemberSearch" placeholder="Name or email" />
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <label for="facility" class="form-label">Facility</label>
+            <input type="text" id="facility" name="facility" class="form-control" value="@Model.FacilitySearch" placeholder="Facility name" />
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="sport" class="form-label">Sport</label>
+            <input type="text" id="sport" name="sport" class="form-control" value="@Model.SportSearch" placeholder="e.g. Tennis" />
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" id="date" name="date" class="form-control" value="@(Model.Date?.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="col-sm-6 col-lg-2">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select">
+                <option value="" selected="@(string.IsNullOrEmpty(Model.Status))">All</option>
+                <option value="upcoming" selected="@(Model.Status == "upcoming")">Upcoming</option>
+                <option value="completed" selected="@(Model.Status == "completed")">Completed</option>
+                <option value="cancelled" selected="@(Model.Status == "cancelled")">Cancelled</option>
+            </select>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Clear</a>
+        </div>
+    </form>
+</div>
+
+@if (!Model.Bookings.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-calendar3 fs-2 text-muted d-block mb-2" aria-hidden="true"></i>
+        <p class="mb-0">No bookings matched your filters.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle bg-white">
+            <thead>
+                <tr>
+                    <th scope="col">Member</th>
+                    <th scope="col">Facility</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model.Bookings)
+                {
+                    <tr>
+                        <td>@booking.MemberName</td>
+                        <td>@booking.FacilityName <span class="text-muted small">(@booking.FacilityType)</span></td>
+                        <td>@booking.BookingDate.ToString("dd MMM yyyy")</td>
+                        <td>@booking.StartTime.ToString("HH:mm")–@booking.EndTime.ToString("HH:mm")</td>
+                        <td>
+                            @switch (booking.Status)
+                            {
+                                case BookingService.BookingStatus.Cancelled:
+                                    <span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle">Cancelled</span>
+                                    break;
+                                case BookingService.BookingStatus.Completed:
+                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Completed</span>
+                                    if (booking.HasReview)
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle"><i class="bi bi-star-fill me-1" aria-hidden="true"></i>Reviewed</span>
+                                    }
+                                    break;
+                                default:
+                                    if (booking.CanCancel)
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle">Upcoming</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary-emphasis border">In Progress</span>
+                                    }
+                                    break;
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye me-1" aria-hidden="true"></i>View
+                                </a>
+                                @if (booking.CanCancel)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@booking.BookingId" method="post"
+                                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancel
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

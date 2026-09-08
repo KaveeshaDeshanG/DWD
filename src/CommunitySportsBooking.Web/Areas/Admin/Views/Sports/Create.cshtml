@@ -1,0 +1,32 @@
+@model SportFormViewModel
+@{
+    ViewData["Title"] = "Add Sport";
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Sports</a>
+    <h2><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Sport</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="form-card">
+            <form asp-action="Create" method="post" novalidate>
+                <div asp-validation-summary="All"></div>
+
+                <label asp-for="SportName" class="form-label"></label>
+                <input asp-for="SportName" class="form-control" autofocus />
+                <span asp-validation-for="SportName" class="text-danger"></span>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1" aria-hidden="true"></i>Add Sport</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

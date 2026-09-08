@@ -5,6 +5,7 @@ using CommunitySportsBooking.Web.Data;
 using CommunitySportsBooking.Web.Models.Entities;
 using CommunitySportsBooking.Web.Models.ViewModels;
 using CommunitySportsBooking.Web.Services;
+using CommunitySportsBooking.Web.Tools;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -376,5 +377,166 @@ public class AccountFunctionalityTests
         Assert.IsType<ViewResult>(result);
         await using var verify = CreateContext();
         Assert.Equal(beforeCount, await verify.Members.CountAsync());
+    }
+
+    // ---------- Admin login (Login now accepts a non-email identifier so the
+    // dedicated Admin account can sign in through this exact same pipeline —
+    // no special-cased "admin"/"admin" branch anywhere in AccountController) ----------
+
+    [Fact]
+    public void LoginViewModel_UsernameStyleValue_PassesValidation()
+    {
+        // Proves Login's relaxed validation (no [EmailAddress], unlike
+        // RegisterViewModel.Email) actually accepts a non-email identifier
+        // like the Admin account's "admin", not just that the controller
+        // would theoretically handle it.
+        var model = new LoginViewModel { Email = "admin", Password = "admin" };
+        var results = new List<ValidationResult>();
+
+        var isValid = Validator.TryValidateObject(model, new ValidationContext(model), results, validateAllProperties: true);
+
+        Assert.True(isValid);
+    }
+
+    [Fact]
+    public async Task Login_AnyAdminMember_NoReturnUrl_RedirectsToAdminDashboard()
+    {
+        // Deliberately NOT the literal "admin" account — proves the redirect
+        // is driven by IsAdmin generically, not a hard-coded check against a
+        // specific email, matching Program.cs/AdminPolicies' own IsAdmin-only
+        // authorization signal.
+        await using var context = CreateContext();
+        var hasher = new PasswordHasher<Member>();
+        var email = $"test.adminredirect.{Guid.NewGuid():N}@example.com";
+        var member = new Member
+        {
+            FirstName = "Test", LastName = "AdminRedirect", Email = email, Phone = "07700 900040",
+            AddressLine = "40 Test Street", City = "Springfield", IsActive = true, IsAdmin = true
+        };
+        member.PasswordHash = hasher.HashPassword(member, "TestPass123");
+        context.Members.Add(member);
+        await context.SaveChangesAsync();
+
+        try
+        {
+            await using var loginContext = CreateContext();
+            var (controller, _) = CreateAccountControllerWithAuth(loginContext, hasher);
+            var model = new LoginViewModel { Email = email, Password = "TestPass123" };
+
+            var result = await controller.Login(model);
+
+            var redirect = Assert.IsType<LocalRedirectResult>(result);
+            Assert.Equal("/Admin", redirect.Url);
+        }
+        finally
+        {
+            await DeleteMemberAsync(member.MemberId);
+        }
+    }
+
+    [Fact]
+    public async Task Login_AdminMember_WithReturnUrl_HonorsReturnUrlOverAdminDefault()
+    {
+        await using var context = CreateContext();
+        var hasher = new PasswordHasher<Member>();
+        var email = $"test.adminreturnurl.{Guid.NewGuid():N}@example.com";
+        var member = new Member
+        {
+            FirstName = "Test", LastName = "AdminReturnUrl", Email = email, Phone = "07700 900041",
+            AddressLine = "41 Test Street", City = "Springfield", IsActive = true, IsAdmin = true
+        };
+        member.PasswordHash = hasher.HashPassword(member, "TestPass123");
+        context.Members.Add(member);
+        await context.SaveChangesAsync();
+
+        try
+        {
+            await using var loginContext = CreateContext();
+            var (controller, _) = CreateAccountControllerWithAuth(loginContext, hasher);
+            var model = new LoginViewModel { Email = email, Password = "TestPass123", ReturnUrl = "/Admin/Members" };
+
+            var result = await controller.Login(model);
+
+            var redirect = Assert.IsType<LocalRedirectResult>(result);
+            Assert.Equal("/Admin/Members", redirect.Url);
+        }
+        finally
+        {
+            await DeleteMemberAsync(member.MemberId);
+        }
+    }
+
+    [Fact]
+    public async Task Login_NormalMember_NoReturnUrl_StillRedirectsHome_NotAdmin()
+    {
+        // Regression proof: an ordinary member's login redirect is unchanged
+        // by the Admin-redirect addition.
+        await using var context = CreateContext();
+        var hasher = new PasswordHasher<Member>();
+        var email = $"test.normalredirect.{Guid.NewGuid():N}@example.com";
+        var member = new Member
+        {
+            FirstName = "Test", LastName = "NormalRedirect", Email = email, Phone = "07700 900042",
+            AddressLine = "42 Test Street", City = "Springfield", IsActive = true, IsAdmin = false
+        };
+        member.PasswordHash = hasher.HashPassword(member, "TestPass123");
+        context.Members.Add(member);
+        await context.SaveChangesAsync();
+
+        try
+        {
+            await using var loginContext = CreateContext();
+            var (controller, _) = CreateAccountControllerWithAuth(loginContext, hasher);
+            var model = new LoginViewModel { Email = email, Password = "TestPass123" };
+
+            var result = await controller.Login(model);
+
+            var redirect = Assert.IsType<LocalRedirectResult>(result);
+            Assert.Equal("/", redirect.Url);
+        }
+        finally
+        {
+            await DeleteMemberAsync(member.MemberId);
+        }
+    }
+
+    [Fact]
+    public async Task Login_SeededAdminAccount_Succeeds_RedirectsToAdminDashboardAndGrantsAdminClaim()
+    {
+        // Exercises the actual seeded "admin"/"admin" account (Tools/
+        // AdminAccountSeeder.cs) through the exact same Login pipeline as
+        // every other credential — proves the deliverable itself, not just
+        // the generic mechanism the tests above already cover.
+        await using var context = CreateContext();
+        var seeded = await context.Members.SingleOrDefaultAsync(m => m.Email == AdminAccountSeeder.AdminEmail);
+        Assert.NotNull(seeded); // AdminAccountSeeder must have been run against this database
+        Assert.True(seeded!.IsAdmin);
+
+        var hasher = new PasswordHasher<Member>();
+        await using var loginContext = CreateContext();
+        var (controller, authService) = CreateAccountControllerWithAuth(loginContext, hasher);
+        var model = new LoginViewModel { Email = AdminAccountSeeder.AdminEmail, Password = AdminAccountSeeder.AdminPassword };
+
+        var result = await controller.Login(model);
+
+        var redirect = Assert.IsType<LocalRedirectResult>(result);
+        Assert.Equal("/Admin", redirect.Url);
+        Assert.NotNull(authService.SignedInPrincipal);
+        Assert.True(authService.SignedInPrincipal!.HasClaim(ClaimTypes.Role, "Admin"));
+    }
+
+    [Fact]
+    public async Task Login_SeededAdminAccount_WrongPassword_FailsGenerically()
+    {
+        await using var context = CreateContext();
+        var hasher = new PasswordHasher<Member>();
+        var controller = new AccountController(context, hasher);
+        var model = new LoginViewModel { Email = AdminAccountSeeder.AdminEmail, Password = "definitely-wrong-password" };
+
+        var result = await controller.Login(model);
+
+        Assert.IsType<ViewResult>(result);
+        Assert.False(controller.ModelState.IsValid);
+        Assert.Contains(controller.ModelState[string.Empty]!.Errors, e => e.ErrorMessage == "Invalid email or password.");
     }
 }

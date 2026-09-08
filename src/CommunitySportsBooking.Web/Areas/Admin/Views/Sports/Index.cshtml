@@ -1,0 +1,65 @@
+@model SportIndexViewModel
+@{
+    ViewData["Title"] = "Sports";
+}
+
+<div class="page-section">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div>
+            <h2 class="mb-1"><i class="bi bi-trophy me-2" aria-hidden="true"></i>Sports</h2>
+            <p class="text-muted mb-0">@Model.Sports.Count sport@(Model.Sports.Count == 1 ? "" : "s") @(string.IsNullOrWhiteSpace(Model.Search) ? "total" : "matching your search").</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add Sport</a>
+    </div>
+</div>
+
+<div class="form-card mb-3">
+    <form asp-action="Index" method="get" class="row g-2 align-items-end">
+        <div class="col-sm-8 col-lg-5">
+            <label for="search" class="form-label">Search by name</label>
+            <input type="text" id="search" name="search" class="form-control" value="@Model.Search" placeholder="e.g. Tennis" />
+        </div>
+        <div class="col-auto d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Clear</a>
+        </div>
+    </form>
+</div>
+
+@if (!Model.Sports.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-trophy fs-2 text-muted d-block mb-2" aria-hidden="true"></i>
+        <p class="mb-0">No sports matched your search.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle bg-white">
+            <thead>
+                <tr>
+                    <th scope="col">Sport</th>
+                    <th scope="col">Facilities</th>
+                    <th scope="col">Member Preferences</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sport in Model.Sports)
+                {
+                    <tr>
+                        <td>@sport.SportName</td>
+                        <td>@sport.FacilityCount</td>
+                        <td>@sport.MemberPreferenceCount</td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@sport.SportId" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye me-1" aria-hidden="true"></i>View
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

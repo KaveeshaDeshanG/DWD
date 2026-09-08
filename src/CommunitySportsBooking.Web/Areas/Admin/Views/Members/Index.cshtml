@@ -1,0 +1,81 @@
+@model MemberIndexViewModel
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="page-section">
+    <h2><i class="bi bi-people me-2" aria-hidden="true"></i>Members</h2>
+    <p class="text-muted">@Model.Members.Count member@(Model.Members.Count == 1 ? "" : "s") @(string.IsNullOrWhiteSpace(Model.Search) ? "total" : "matching your search").</p>
+</div>
+
+<div class="form-card mb-3">
+    <form asp-action="Index" method="get" class="row g-2 align-items-end">
+        <div class="col-sm-8 col-lg-5">
+            <label for="search" class="form-label">Search by name or email</label>
+            <input type="text" id="search" name="search" class="form-control" value="@Model.Search" placeholder="e.g. Alice or alice.johnson@example.com" />
+        </div>
+        <div class="col-auto d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Clear</a>
+        </div>
+    </form>
+</div>
+
+@if (!Model.Members.Any())
+{
+    <div class="empty-state">
+        <i class="bi bi-people fs-2 text-muted d-block mb-2" aria-hidden="true"></i>
+        <p class="mb-0">No members matched your search.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle bg-white">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Registered</th>
+                    <th scope="col">Bookings</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.Members)
+                {
+                    <tr>
+                        <td>
+                            @member.FullName
+                            @if (member.IsAdmin)
+                            {
+                                <span class="badge bg-dark ms-1">Admin</span>
+                            }
+                        </td>
+                        <td>@member.Email</td>
+                        <td>@member.City</td>
+                        <td>@member.RegisteredDate.ToString("dd MMM yyyy")</td>
+                        <td>@member.BookingCount</td>
+                        <td>
+                            @if (member.IsActive)
+                            {
+                                <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary-subtle text-secondary-emphasis border">Inactive</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@member.MemberId" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye me-1" aria-hidden="true"></i>View
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

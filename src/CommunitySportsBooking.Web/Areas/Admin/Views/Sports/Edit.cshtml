@@ -1,0 +1,33 @@
+@model SportFormViewModel
+@{
+    ViewData["Title"] = "Edit Sport";
+    var sportId = ViewContext.RouteData.Values["id"];
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Sports</a>
+    <h2><i class="bi bi-pencil me-2" aria-hidden="true"></i>Edit Sport</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="form-card">
+            <form asp-action="Edit" asp-route-id="@sportId" method="post" novalidate>
+                <div asp-validation-summary="All"></div>
+
+                <label asp-for="SportName" class="form-label"></label>
+                <input asp-for="SportName" class="form-control" autofocus />
+                <span asp-validation-for="SportName" class="text-danger"></span>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1" aria-hidden="true"></i>Save Changes</button>
+                    <a asp-action="Details" asp-route-id="@sportId" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,38 @@
+@model AdminReviewDetailsViewModel
+@{
+    ViewData["Title"] = "Review Details";
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Reviews</a>
+    <h2 class="mb-0">Review for @Model.FacilityName</h2>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="form-card h-100">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-star me-1" aria-hidden="true"></i>Rating &amp; Comment</h3>
+            @await Html.PartialAsync("_StarRatingPartial", Model.Rating)
+            <p class="mb-0 mt-2">@Model.Comment</p>
+            <p class="text-muted small mt-3 mb-0">Submitted @Model.ReviewDate.ToString("dd MMM yyyy HH:mm")</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-card mb-3">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-person me-1" aria-hidden="true"></i>Member</h3>
+            <div class="mb-1"><strong>@Model.MemberName</strong></div>
+            <div class="small text-muted mb-3">@Model.MemberEmail</div>
+            <a asp-controller="Members" asp-action="Details" asp-route-id="@Model.MemberId" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye me-1" aria-hidden="true"></i>View Member
+            </a>
+        </div>
+        <div class="form-card">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-building me-1" aria-hidden="true"></i>Facility</h3>
+            <div class="mb-1"><strong>@Model.FacilityName</strong></div>
+            <div class="small text-muted mb-3">@Model.FacilityType &middot; Booked @Model.BookingDate.ToString("dd MMM yyyy")</div>
+            <a asp-controller="Facilities" asp-action="Details" asp-route-id="@Model.FacilityId" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye me-1" aria-hidden="true"></i>View Facility
+            </a>
+        </div>
+    </div>
+</div>

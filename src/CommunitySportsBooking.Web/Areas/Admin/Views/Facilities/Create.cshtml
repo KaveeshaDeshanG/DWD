@@ -1,0 +1,66 @@
+@model FacilityFormViewModel
+@{
+    ViewData["Title"] = "Add Facility";
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Facilities</a>
+    <h2><i class="bi bi-plus-lg me-2" aria-hidden="true"></i>Add Facility</h2>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="form-card">
+            <form asp-action="Create" method="post" novalidate>
+                <div asp-validation-summary="All"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="FacilityName" class="form-label"></label>
+                        <input asp-for="FacilityName" class="form-control" autofocus />
+                        <span asp-validation-for="FacilityName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="FacilityType" class="form-label"></label>
+                        <input asp-for="FacilityType" class="form-control" placeholder="e.g. Tennis Court" />
+                        <span asp-validation-for="FacilityType" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Location" class="form-label"></label>
+                        <input asp-for="Location" class="form-control" />
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="City" class="form-label"></label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="AddressLine" class="form-label"></label>
+                        <input asp-for="AddressLine" class="form-control" />
+                        <span asp-validation-for="AddressLine" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Capacity" class="form-label"></label>
+                        <input asp-for="Capacity" class="form-control" type="number" min="1" />
+                        <span asp-validation-for="Capacity" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1" aria-hidden="true"></i>Add Facility</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

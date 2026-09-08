@@ -1,0 +1,103 @@
+@model SportDetailsViewModel
+@{
+    ViewData["Title"] = Model.SportName;
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Sports</a>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h2 class="mb-0">@Model.SportName</h2>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.SportId" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-pencil me-1" aria-hidden="true"></i>Edit
+            </a>
+            @if (Model.CanDelete)
+            {
+                <form asp-action="Delete" asp-route-id="@Model.SportId" method="post"
+                      onsubmit="return confirm('Delete &quot;@Model.SportName&quot;? This cannot be undone.');">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                    </button>
+                </form>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled
+                        title="This sport is still in use and cannot be deleted.">
+                    <i class="bi bi-trash me-1" aria-hidden="true"></i>Delete
+                </button>
+            }
+        </div>
+    </div>
+    @if (!Model.CanDelete)
+    {
+        <p class="text-muted small mt-2 mb-0">
+            <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+            This sport can't be deleted while it is used by a facility or preferred by a member — remove those associations first.
+        </p>
+    }
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 g-3 mb-4">
+    <div class="col">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-building" aria-hidden="true"></i></div>
+            <div>
+                <div class="stat-value">@Model.Facilities.Count</div>
+                <div class="stat-label">Facilities</div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-people" aria-hidden="true"></i></div>
+            <div>
+                <div class="stat-value">@Model.MemberPreferenceCount</div>
+                <div class="stat-label">Member Preferences</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-section">
+    <h3 class="h5"><i class="bi bi-building me-1 text-primary" aria-hidden="true"></i>Facilities Supporting This Sport</h3>
+    @if (!Model.Facilities.Any())
+    {
+        <div class="empty-state">
+            <p class="mb-0">No facilities currently support this sport.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table align-middle bg-white">
+                <thead>
+                    <tr>
+                        <th scope="col">Facility</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var facility in Model.Facilities)
+                    {
+                        <tr>
+                            <td>@facility.FacilityName</td>
+                            <td>@facility.FacilityType</td>
+                            <td>
+                                @if (facility.IsActive)
+                                {
+                                    <span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis border">Inactive</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

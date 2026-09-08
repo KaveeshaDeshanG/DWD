@@ -1,0 +1,49 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+
+    // (icon, colour class, value, label) — colour classes are Bootstrap
+    // text-bg-* utilities layered on the existing .stat-icon shape, not new
+    // colours: keeps this consistent with the app's own token palette.
+    (string Icon, string Value, string Label)[] cards =
+    {
+        ("bi-people", Model.TotalMembers.ToString(), "Total Members"),
+        ("bi-person-check", Model.ActiveMembers.ToString(), "Active Members"),
+        ("bi-trophy", Model.TotalSports.ToString(), "Total Sports"),
+        ("bi-building", Model.TotalFacilities.ToString(), "Total Facilities"),
+        ("bi-calendar3", Model.TotalBookings.ToString(), "Total Bookings"),
+        ("bi-calendar-event", Model.UpcomingBookings.ToString(), "Upcoming Bookings"),
+        ("bi-calendar-check", Model.CompletedBookings.ToString(), "Completed Bookings"),
+        ("bi-calendar-x", Model.CancelledBookings.ToString(), "Cancelled Bookings"),
+        ("bi-star", Model.TotalReviews.ToString(), "Total Reviews"),
+        ("bi-envelope-exclamation", Model.NewInquiries.ToString(), "New Inquiries"),
+    };
+}
+
+<div class="page-section">
+    <h2>Dashboard</h2>
+    <p class="text-muted">A live snapshot of the system — every number below is read from the database on each request.</p>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-3">
+    @foreach (var card in cards)
+    {
+        <div class="col">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi @card.Icon" aria-hidden="true"></i></div>
+                <div>
+                    <div class="stat-value">@card.Value</div>
+                    <div class="stat-label">@card.Label</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Model.TotalFacilities == 0 && Model.TotalMembers == 0 && Model.TotalBookings == 0)
+{
+    <div class="empty-state mt-4">
+        <i class="bi bi-info-circle fs-1 text-muted d-block mb-3" aria-hidden="true"></i>
+        <p>No data yet — statistics will appear here as members, facilities, and bookings are added.</p>
+    </div>
+}

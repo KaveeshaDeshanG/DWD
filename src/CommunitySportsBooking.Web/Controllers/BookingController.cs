@@ -117,6 +117,7 @@ public class BookingController : Controller
                 BookingDate = b.BookingDate,
                 StartTime = b.StartTime,
                 EndTime = b.EndTime,
+                IsCancelled = b.IsCancelled,
                 HasReview = _context.Reviews.Any(r => r.BookingId == b.BookingId)
             })
             .ToListAsync();
@@ -124,19 +125,27 @@ public class BookingController : Controller
         var model = new MyBookingsViewModel();
         foreach (var booking in bookings)
         {
-            booking.IsCompleted = BookingService.IsCompleted(booking.BookingDate, booking.EndTime);
+            var status = BookingService.GetEffectiveStatus(booking.IsCancelled, booking.BookingDate, booking.EndTime);
+            booking.IsCompleted = status == BookingService.BookingStatus.Completed;
             // CanCancel is deliberately based on HasStarted, not IsCompleted:
             // a booking that is currently in progress (started but not yet
             // finished) has IsCompleted == false, so it correctly stays in
-            // the Upcoming list, but must not be cancellable.
-            booking.CanCancel = !BookingService.HasStarted(booking.BookingDate, booking.StartTime);
-            if (booking.IsCompleted)
+            // the Upcoming list, but must not be cancellable. A cancelled
+            // booking is never cancellable again either way.
+            booking.CanCancel = status == BookingService.BookingStatus.Upcoming
+                && !BookingService.HasStarted(booking.BookingDate, booking.StartTime);
+
+            switch (status)
             {
-                model.CompletedBookings.Add(booking);
-            }
-            else
-            {
-                model.UpcomingBookings.Add(booking);
+                case BookingService.BookingStatus.Cancelled:
+                    model.CancelledBookings.Add(booking);
+                    break;
+                case BookingService.BookingStatus.Completed:
+                    model.CompletedBookings.Add(booking);
+                    break;
+                default:
+                    model.UpcomingBookings.Add(booking);
+                    break;
             }
         }
 
@@ -163,19 +172,15 @@ public class BookingController : Controller
             return NotFound();
         }
 
-        if (BookingService.HasStarted(booking.BookingDate, booking.StartTime))
+        // Shared eligibility rule + removal — also used by Areas/Admin/
+        // Controllers/BookingsController.Cancel, so the two can never
+        // quietly disagree on what "cancellable" means (Phase 6).
+        var result = await BookingService.CancelAsync(_context, booking);
+        if (!result.Success)
         {
-            TempData["ErrorMessage"] = "This booking cannot be cancelled because it has already started or been completed.";
+            TempData["ErrorMessage"] = result.ErrorMessage;
             return RedirectToAction(nameof(MyBookings));
         }
-
-        // Safe as a hard delete: a booking eligible for cancellation has not
-        // started yet, and Review can only be created for a completed
-        // booking (ReviewController.CheckEligibility), so a cancellable
-        // booking can never have a Review row — FK_Review_Booking's CASCADE
-        // is defensive here, not something this path actually relies on.
-        _context.Bookings.Remove(booking);
-        await _context.SaveChangesAsync();
 
         TempData["SuccessMessage"] = "Your booking has been cancelled.";
         return RedirectToAction(nameof(MyBookings));

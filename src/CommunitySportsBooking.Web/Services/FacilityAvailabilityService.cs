@@ -21,8 +21,11 @@ public static class FacilityAvailabilityService
 
         // BR-04: overlap iff NewStart < ExistingEnd AND NewEnd > ExistingStart.
         // Touching boundaries are NOT an overlap (deliberately not <=/>=).
+        // A cancelled booking is excluded — it must never block a new one
+        // for the same slot (database/08_BookingCancellation.sql applies the
+        // same exclusion to the two database-side overlap checks).
         var hasOverlap = await context.Bookings
-            .Where(b => b.FacilityId == facilityId && b.BookingDate == date)
+            .Where(b => b.FacilityId == facilityId && b.BookingDate == date && !b.IsCancelled)
             .AnyAsync(b => start < b.EndTime && end > b.StartTime);
 
         return !hasOverlap;

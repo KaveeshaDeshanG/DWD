@@ -34,6 +34,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(b => b.CreatedDate).HasDefaultValueSql("SYSUTCDATETIME()");
+        builder.Property(b => b.IsCancelled).HasDefaultValue(false);
 
         // CK_Booking_StartBeforeEnd already exists in the database (Phase 4) —
         // intentionally not reproduced here; mapping-only, no schema ownership.

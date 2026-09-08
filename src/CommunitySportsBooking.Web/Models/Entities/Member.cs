@@ -12,6 +12,7 @@ public class Member
     public string PasswordHash { get; set; } = string.Empty;
     public DateTime RegisteredDate { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsAdmin { get; set; }
 
     public ICollection<MemberSport> MemberSports { get; set; } = new List<MemberSport>();
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

@@ -10,10 +10,12 @@ public class BookingListItemViewModel
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
     public bool IsCompleted { get; set; }
+    public bool IsCancelled { get; set; }
     public bool HasReview { get; set; }
 
     // True only when the booking has not yet started. Distinct from
     // !IsCompleted: a currently in-progress booking has IsCompleted == false
-    // (still shown as Upcoming) but CanCancel == false.
+    // (still shown as Upcoming) but CanCancel == false. Always false once
+    // IsCancelled is true.
     public bool CanCancel { get; set; }
 }

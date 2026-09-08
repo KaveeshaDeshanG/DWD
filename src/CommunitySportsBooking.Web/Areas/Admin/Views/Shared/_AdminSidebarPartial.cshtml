@@ -1,0 +1,39 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+
+    // Every module below is planned for a later phase (Phase 3+) except
+    // Dashboard, which already exists. Their links point at the real,
+    // intended URL rather than "#" — until each controller is built,
+    // clicking one reaches the app's own existing branded 404 page
+    // (Program.cs's UseStatusCodePagesWithReExecute), not a fake page
+    // pretending to be that feature.
+    (string Controller, string Icon, string Label)[] navItems =
+    {
+        ("Dashboard", "bi-speedometer2", "Dashboard"),
+        ("Members", "bi-people", "Members"),
+        ("Sports", "bi-trophy", "Sports"),
+        ("Facilities", "bi-building", "Facilities"),
+        ("Bookings", "bi-calendar3", "Bookings"),
+        ("Reviews", "bi-star", "Reviews"),
+        ("Inquiries", "bi-envelope", "Inquiries"),
+    };
+}
+<div class="offcanvas-lg offcanvas-start admin-sidebar" tabindex="-1" id="adminSidebar" aria-labelledby="adminSidebarLabel">
+    <div class="offcanvas-header d-lg-none">
+        <h5 class="offcanvas-title" id="adminSidebarLabel">Admin Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#adminSidebar" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-block p-2 p-lg-3">
+        <nav class="nav flex-column gap-1" aria-label="Admin navigation">
+            @foreach (var item in navItems)
+            {
+                var isActive = string.Equals(currentController, item.Controller, StringComparison.OrdinalIgnoreCase);
+                <a class="admin-nav-link @(isActive ? "active" : "")"
+                   aria-current="@(isActive ? "page" : null)"
+                   href="/Admin/@item.Controller">
+                    <i class="bi @item.Icon me-2" aria-hidden="true"></i>@item.Label
+                </a>
+            }
+        </nav>
+    </div>
+</div>

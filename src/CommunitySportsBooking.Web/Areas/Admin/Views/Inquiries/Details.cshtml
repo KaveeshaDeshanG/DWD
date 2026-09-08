@@ -1,0 +1,47 @@
+@model InquiryDetailsViewModel
+@{
+    ViewData["Title"] = "Inquiry Details";
+    var badgeClass = Model.Status switch
+    {
+        "New" => "bg-primary-subtle text-primary-emphasis border border-primary-subtle",
+        "Reviewed" => "bg-warning-subtle text-warning-emphasis border border-warning-subtle",
+        _ => "bg-success-subtle text-success-emphasis border border-success-subtle"
+    };
+}
+
+<div class="page-section">
+    <a asp-action="Index" class="small d-inline-block mb-2"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Inquiries</a>
+    <h2 class="mb-0">
+        @Model.Subject
+        <span class="badge @badgeClass">@Model.Status</span>
+    </h2>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="form-card h-100">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-chat-left-text me-1" aria-hidden="true"></i>Message</h3>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.Message</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-card mb-3">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-person me-1" aria-hidden="true"></i>From</h3>
+            <div class="mb-1"><strong>@Model.Name</strong></div>
+            <div class="small text-muted mb-1">@Model.Email</div>
+            <div class="small text-muted">Submitted @Model.InquiryDate.ToString("dd MMM yyyy HH:mm")</div>
+        </div>
+
+        <div class="form-card">
+            <h3 class="h6 text-uppercase text-muted mb-3"><i class="bi bi-flag me-1" aria-hidden="true"></i>Update Status</h3>
+            <form asp-action="UpdateStatus" asp-route-id="@Model.InquiryId" method="post" class="d-flex gap-2">
+                <select name="status" class="form-select">
+                    <option value="New" selected="@(Model.Status == "New")">New</option>
+                    <option value="Reviewed" selected="@(Model.Status == "Reviewed")">Reviewed</option>
+                    <option value="Closed" selected="@(Model.Status == "Closed")">Closed</option>
+                </select>
+                <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-check2" aria-hidden="true"></i></button>
+            </form>
+        </div>
+    </div>
+</div>

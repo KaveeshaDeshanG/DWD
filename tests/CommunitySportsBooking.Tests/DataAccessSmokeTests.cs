@@ -28,12 +28,18 @@ public class DataAccessSmokeTests
     {
         await using var context = CreateContext();
 
-        // Member/Booking use >= rather than an exact match: this database has
-        // been actually used through the running app (not just seeded) since
-        // Phase 4, so real rows beyond the original seed data are expected
-        // and legitimate — not something a test should delete or treat as
-        // drift. The other six tables haven't been touched by real usage yet,
-        // so an exact match still holds and is the stronger assertion.
+        // Member/Booking/MemberSport use >= rather than an exact match: this
+        // database has been actually used through the running app (not just
+        // seeded) since Phase 4, so real rows beyond the original seed data
+        // are expected and legitimate — not something a test should delete
+        // or treat as drift. MemberSport joined this group 2026-09-08: a real
+        // member (not a seed row) registered and selected Cricket/Volleyball
+        // as preferred sports, growing MemberSport from the seeded 8 to 10 —
+        // confirmed via direct inspection to be genuine usage, the same
+        // "real data grew past the seed baseline" situation as Member/
+        // Booking, not corruption or a bug. The other five tables haven't
+        // been touched by real usage yet, so an exact match still holds and
+        // is the stronger assertion there.
         // Sport/Facility/FacilitySport grew across two deliberate seed-data
         // extensions (both documented in database/05_SeedData.sql, not
         // drift): 6->8 sports (Cricket, Volleyball added; "Football" renamed
@@ -42,7 +48,7 @@ public class DataAccessSmokeTests
         // two new sports) and 7->9->11 FacilitySport links accordingly.
         Assert.True(await context.Members.CountAsync() >= 5);
         Assert.Equal(8, await context.Sports.CountAsync());
-        Assert.Equal(8, await context.MemberSports.CountAsync());
+        Assert.True(await context.MemberSports.CountAsync() >= 8);
         Assert.Equal(8, await context.Facilities.CountAsync());
         Assert.Equal(11, await context.FacilitySports.CountAsync());
         Assert.True(await context.Bookings.CountAsync() >= 6);

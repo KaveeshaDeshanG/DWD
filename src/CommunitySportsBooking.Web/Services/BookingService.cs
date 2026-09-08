@@ -1,5 +1,6 @@
 using System.Data;
 using CommunitySportsBooking.Web.Data;
+using CommunitySportsBooking.Web.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -105,5 +106,59 @@ public static class BookingService
     public static bool IsBeyondMaxAdvanceWindow(DateOnly date)
     {
         return date > DateOnly.FromDateTime(DateTime.UtcNow).AddDays(MaxAdvanceBookingDays);
+    }
+
+    public sealed record CancelResult(bool Success, string? ErrorMessage);
+
+    // Shared cancellation rule — one definition, two callers
+    // (BookingController.Cancel for a member's own booking,
+    // Areas/Admin/Controllers/BookingsController.Cancel for any booking).
+    // Ownership is each caller's own concern (resolved before this is ever
+    // called); this method only enforces the shared eligibility rule and
+    // performs the cancellation, so the two call sites can never quietly
+    // drift apart on what "cancellable" means. HasStarted is a superset of
+    // "completed" (StartTime < EndTime always — CK_Booking_StartBeforeEnd),
+    // so this single check also protects a completed booking's Review row:
+    // a completed booking can never reach the soft-cancel branch below.
+    //
+    // Soft-cancel, not delete: sets IsCancelled/CancelledDate rather than
+    // removing the row, so Admin retains cancelled booking history and the
+    // original Member/Facility/date/time are preserved (database/
+    // 08_BookingCancellation.sql). FacilityAvailabilityService and both
+    // database-side overlap checks already exclude IsCancelled = 1 rows, so
+    // a cancelled slot is immediately bookable again.
+    public static async Task<CancelResult> CancelAsync(AppDbContext context, Booking booking)
+    {
+        if (booking.IsCancelled)
+        {
+            return new CancelResult(false, "This booking has already been cancelled.");
+        }
+
+        if (HasStarted(booking.BookingDate, booking.StartTime))
+        {
+            return new CancelResult(false, "This booking cannot be cancelled because it has already started or been completed.");
+        }
+
+        booking.IsCancelled = true;
+        booking.CancelledDate = DateTime.UtcNow;
+        await context.SaveChangesAsync();
+        return new CancelResult(true, null);
+    }
+
+    public enum BookingStatus { Upcoming, Completed, Cancelled }
+
+    // The one place "what status does this booking effectively have" is
+    // decided — reused by MyBookings, the Admin Bookings list/details, and
+    // the Dashboard, so none of them can invent a different combination of
+    // the stored IsCancelled flag and the derived IsCompleted logic.
+    // Cancelled always wins; Completed is still never stored, only derived.
+    public static BookingStatus GetEffectiveStatus(bool isCancelled, DateOnly bookingDate, TimeOnly endTime)
+    {
+        if (isCancelled)
+        {
+            return BookingStatus.Cancelled;
+        }
+
+        return IsCompleted(bookingDate, endTime) ? BookingStatus.Completed : BookingStatus.Upcoming;
     }
 }

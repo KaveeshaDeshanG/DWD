@@ -75,6 +75,15 @@ public class AccountController : Controller
         LoginAttemptTracker.RecordSuccess(model.Email);
         await SignInMemberAsync(member, model.RememberMe);
 
+        // An explicit ReturnUrl (e.g. bounced here from a protected Admin
+        // page) always wins. Otherwise, any admin — not a specific account,
+        // IsAdmin is the only signal — lands on the Admin Dashboard rather
+        // than the public homepage.
+        if (string.IsNullOrEmpty(model.ReturnUrl) && member.IsAdmin)
+        {
+            return LocalRedirect("/Admin");
+        }
+
         return LocalRedirect(model.ReturnUrl ?? "/");
     }
 
@@ -85,6 +94,18 @@ public class AccountController : Controller
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return LocalRedirect("/");
+    }
+
+    // Backing page for the cookie handler's AccessDeniedPath (Program.cs) —
+    // reached when a signed-in Member without the Admin claim is rejected by
+    // the AdminOnly policy. An unauthenticated request never reaches here:
+    // [Authorize]/policy failure for an anonymous user redirects to
+    // LoginPath instead, per the standard cookie-authentication challenge
+    // vs. forbid distinction.
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 
     [HttpGet]
@@ -151,6 +172,15 @@ public class AccountController : Controller
             new(ClaimTypes.Name, $"{member.FirstName} {member.LastName}"),
             new(ClaimTypes.Email, member.Email)
         };
+
+        // Admin Panel: only a Member with IsAdmin = true ever receives this
+        // claim — an ordinary member's sign-in is completely unchanged.
+        // AdminOnly (Program.cs) checks for exactly this claim/value.
+        if (member.IsAdmin)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+        }
+
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var authProperties = new AuthenticationProperties { IsPersistent = isPersistent };
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
