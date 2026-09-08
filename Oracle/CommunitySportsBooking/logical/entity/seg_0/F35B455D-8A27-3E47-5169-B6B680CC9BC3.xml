@@ -139,14 +139,87 @@
 <dataTypePrecision>1</dataTypePrecision>
 <ownDataTypeParameters>,1,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="BookingId" id="971FDA45-C3CE-DC3F-570E-BB5B6FC6AA38">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:30 UTC</createdTime>
+<generatorID>E9945DB1-4FE4-B343-6EDC-5C87F1B6C20A</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<referedAttribute>B9025884-7396-DEAE-F346-6EB111460ADD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FacilityId1" id="86990892-F491-4119-96FE-449EF2EC9755">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:30 UTC</createdTime>
+<generatorID>E9945DB1-4FE4-B343-6EDC-5C87F1B6C20A</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<referedAttribute>C953CC24-9978-AF06-9B77-90C48359F4E9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MemberId" id="62FECA35-907F-DDFF-70A0-D75F0706D00A">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:30 UTC</createdTime>
+<generatorID>E9945DB1-4FE4-B343-6EDC-5C87F1B6C20A</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<referedAttribute>ACBF7AB5-CF54-8765-997B-AD002CB167E2</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FacilityId2" id="32192AC1-B37B-4707-4116-C03DE91C81F3">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:52:25 UTC</createdTime>
+<generatorID>BEE10F95-0614-C2DC-811B-7A2BFE07786A</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>3AA86CC6-9B97-B529-FD53-4A82DF919831</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SportId" id="748DAF29-EA37-02EF-250D-4407A9007D41">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:52:25 UTC</createdTime>
+<generatorID>BEE10F95-0614-C2DC-811B-7A2BFE07786A</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>2BC9939C-6000-982F-3D62-C77D53396D1B</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="8AC0029C-ABD7-D174-50BC-EB94CA208155" name="Member PK">
 <createdBy>Freak</createdBy>
 <createdTime>2026-09-07 18:24:22 UTC</createdTime>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

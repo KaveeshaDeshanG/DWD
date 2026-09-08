@@ -153,14 +153,103 @@
 <dataTypePrecision>1</dataTypePrecision>
 <ownDataTypeParameters>,1,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="IsAdmin" id="21E5D6ED-0A91-8040-19FD-CAE519860F76">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:22:57 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="BookingId" id="9EDF4FE7-F204-3904-EFFE-8BD5B1DC7402">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:14 UTC</createdTime>
+<generatorID>B5FF3B95-5ED2-F9DA-D6FB-4293B0FF82A4</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>B9025884-7396-DEAE-F346-6EB111460ADD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FacilityId" id="B5D3CC07-ABBA-5165-9224-9927400ABB11">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:14 UTC</createdTime>
+<generatorID>B5FF3B95-5ED2-F9DA-D6FB-4293B0FF82A4</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>C953CC24-9978-AF06-9B77-90C48359F4E9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MemberId1" id="8BB5FC50-2923-BBDF-9362-EEDE4EA1043B">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:14 UTC</createdTime>
+<generatorID>B5FF3B95-5ED2-F9DA-D6FB-4293B0FF82A4</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>ACBF7AB5-CF54-8765-997B-AD002CB167E2</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MemberId2" id="55B7646B-1482-A093-20FD-934D12CD4929">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:59 UTC</createdTime>
+<generatorID>19F550AC-F924-92AE-DB45-A67C94EAD309</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>116B886F-E667-12DF-4806-8516B099EFCC</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SportId" id="118E0B33-D9DD-DAB7-4955-B7B9F04425EA">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:51:59 UTC</createdTime>
+<generatorID>19F550AC-F924-92AE-DB45-A67C94EAD309</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>F1CAFDDA-9A48-54DB-41E9-56D42A20828E</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="53B061CD-7E5D-9A8B-3814-59B2826537CE" name="Member PK">
 <createdBy>Freak</createdBy>
 <createdTime>2026-09-07 18:04:32 UTC</createdTime>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

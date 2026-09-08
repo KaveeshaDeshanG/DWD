@@ -68,14 +68,57 @@
 <logicalDatatype>LOGDT015</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="BookingId1" id="1684D520-0937-B133-C9E4-FCA4633AD17C">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:28:47 UTC</createdTime>
+<generatorID>24BBEDA7-3FEC-3D01-C99E-937479B0B7A5</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<referedAttribute>B9025884-7396-DEAE-F346-6EB111460ADD</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FacilityId" id="8BE14385-1C3E-F797-EEF2-02107D36A577">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:28:47 UTC</createdTime>
+<generatorID>24BBEDA7-3FEC-3D01-C99E-937479B0B7A5</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<referedAttribute>C953CC24-9978-AF06-9B77-90C48359F4E9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="MemberId" id="3CAFC6C3-02D6-D39A-ADB8-E1EB4D7F40E2">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:50:29 UTC</createdTime>
+<generatorID>24BBEDA7-3FEC-3D01-C99E-937479B0B7A5</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<referedAttribute>ACBF7AB5-CF54-8765-997B-AD002CB167E2</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="43F529C8-C96B-A059-D9A1-EF6E386470E6" name="Member PK">
 <createdBy>Freak</createdBy>
 <createdTime>2026-09-07 18:30:13 UTC</createdTime>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

@@ -25,7 +25,6 @@
 <createdTime>2026-09-07 18:47:31 UTC</createdTime>
 <generatorID>ACBF7AB5-CF54-8765-997B-AD002CB167E2</generatorID>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -37,7 +36,6 @@
 <createdTime>2026-09-07 18:47:31 UTC</createdTime>
 <generatorID>C953CC24-9978-AF06-9B77-90C48359F4E9</generatorID>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -92,6 +90,30 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="IsCancelled" id="24B7EEE3-BF3F-8043-803A-A24E93913525">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<generatorID>BD40D5CC-9EEA-0F92-A0FF-83FAB331F3FF</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CancelledDate" id="4E9AA5E8-E143-21A8-9F6A-16F6CF871D41">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<generatorID>5AAF1BCF-EBED-48E8-2FB9-D366BA0AE812</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="DA509340-B059-2B8B-2B77-32E9AD528063" name="Booking_PK">
@@ -104,6 +126,8 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="4E7331C7-4D97-2CC1-C4EA-B2F361AD960E"/>
+<colUsage columnID="F736AE74-F441-0151-7290-302BB2C92005"/>
+<colUsage columnID="C0D3CD67-9997-E0D6-9759-CDA46E6026F5"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

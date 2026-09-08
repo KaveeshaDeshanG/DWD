@@ -57,6 +57,63 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="Booking_BookingId" id="2EA9EB1C-DB42-CB8A-8A52-FA73B713A0BF">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<generatorID>1684D520-0937-B133-C9E4-FCA4633AD17C</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="307BCC79-36EA-99C3-FA91-67CA38025F09" referredColumn="4E7331C7-4D97-2CC1-C4EA-B2F361AD960E"/>
+</associations>
+</Column>
+<Column name="Booking_FacilityId" id="7C8292F9-B08D-A585-E68C-F1DE641F898D">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<generatorID>8BE14385-1C3E-F797-EEF2-02107D36A577</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="307BCC79-36EA-99C3-FA91-67CA38025F09" referredColumn="F736AE74-F441-0151-7290-302BB2C92005"/>
+</associations>
+</Column>
+<Column name="Booking_MemberId" id="407D47E4-4D92-E279-A570-AE64267AB690">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<generatorID>3138CDEC-639F-9DFC-7006-19BDE4B74E7D</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="307BCC79-36EA-99C3-FA91-67CA38025F09" referredColumn="C0D3CD67-9997-E0D6-9759-CDA46E6026F5"/>
+</associations>
+</Column>
+<Column name="MemberId" id="1E8272FE-94CF-8900-FA9B-B6FA07E928F3">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:59:32 UTC</createdTime>
+<generatorID>3CAFC6C3-02D6-D39A-ADB8-E1EB4D7F40E2</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="2036338F-8790-528C-DDAB-1421AFFAEB9E" name="Review_PK">
@@ -69,6 +126,32 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="68E3B8EB-C37A-0BBA-EB10-D6CCBBBA25DA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3A208B0F-CDC2-D125-F0C0-C8CA30E59336" name="Review__IDX">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>24BBEDA7-3FEC-3D01-C99E-937479B0B7A5</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="2EA9EB1C-DB42-CB8A-8A52-FA73B713A0BF"/>
+<colUsage columnID="7C8292F9-B08D-A585-E68C-F1DE641F898D"/>
+<colUsage columnID="407D47E4-4D92-E279-A570-AE64267AB690"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="21155FF4-A8D9-7F9A-DC4F-E68C8C8C4BCA" name="Review_Booking_FK">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:31:45 UTC</createdTime>
+<generatorID>24BBEDA7-3FEC-3D01-C99E-937479B0B7A5</generatorID>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="2EA9EB1C-DB42-CB8A-8A52-FA73B713A0BF"/>
+<colUsage columnID="7C8292F9-B08D-A585-E68C-F1DE641F898D"/>
+<colUsage columnID="407D47E4-4D92-E279-A570-AE64267AB690"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

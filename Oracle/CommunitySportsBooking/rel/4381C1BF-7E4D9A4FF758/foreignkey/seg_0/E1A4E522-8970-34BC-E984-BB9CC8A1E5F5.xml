@@ -1,15 +1,15 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="E8E3B3E3-5A09-0441-5055-C1391C227553" containerWithKeyObject="749AC3F6-2157-B107-43F3-9C49C4CD727C" localFKIndex="DF6DA38E-318E-6664-AC54-59ABC23E97E9" name="Sport_and_MemberSport_MemberSport_FK">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="E1A4E522-8970-34BC-E984-BB9CC8A1E5F5" containerWithKeyObject="562FBA0F-34B0-4BD6-5752-290BB1F4C27F" localFKIndex="BA5BC8D5-5504-071F-670A-F5BADF26DC95" name="Member_MemberSport_FK">
 <createdBy>Freak</createdBy>
-<createdTime>2026-09-07 18:47:31 UTC</createdTime>
-<generatorID>36AB58E0-583C-1977-FC2E-43422B81F4D0</generatorID>
+<createdTime>2026-09-08 19:59:32 UTC</createdTime>
+<generatorID>19F550AC-F924-92AE-DB45-A67C94EAD309</generatorID>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
 <referredTableLongName>MemberSport</referredTableLongName>
 <deleteRule>NO ACTION</deleteRule>
 <referredTableID>AED30FF4-02B6-DCF2-6018-657E90A1CF1E</referredTableID>
 <keyObject>F2A04E47-3945-3300-8F68-F0F2F2C3D324</keyObject>
 <referredKeyID>F2A04E47-3945-3300-8F68-F0F2F2C3D324</referredKeyID>
-<mandatory>true</mandatory>
+<mandatory>false</mandatory>
 <refColNames>MemberId,SportId</refColNames>
 <transferable>true</transferable>
 <rely>false</rely>

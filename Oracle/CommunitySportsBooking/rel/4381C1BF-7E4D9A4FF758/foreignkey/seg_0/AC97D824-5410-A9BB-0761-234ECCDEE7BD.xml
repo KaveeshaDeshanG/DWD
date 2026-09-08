@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="888F86B8-E942-4808-F5C8-E398597099BC" containerWithKeyObject="6809B4BE-ED40-7CA3-0536-65139307826F" localFKIndex="E9544F07-C3A2-B870-C54A-84D093370B7E" name="Member_and__Booking_Booking_FK">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="AC97D824-5410-A9BB-0761-234ECCDEE7BD" containerWithKeyObject="562FBA0F-34B0-4BD6-5752-290BB1F4C27F" localFKIndex="E8B044E1-FC62-DFCF-CD0A-F9839DB7D649" name="Member_Booking_FK">
 <createdBy>Freak</createdBy>
-<createdTime>2026-09-07 18:47:31 UTC</createdTime>
+<createdTime>2026-09-08 19:59:32 UTC</createdTime>
 <generatorID>B5FF3B95-5ED2-F9DA-D6FB-4293B0FF82A4</generatorID>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
 <referredTableLongName>Booking</referredTableLongName>
@@ -9,8 +9,8 @@
 <referredTableID>84C50046-5063-8E03-5AEF-76F53A9E9612</referredTableID>
 <keyObject>DA509340-B059-2B8B-2B77-32E9AD528063</keyObject>
 <referredKeyID>DA509340-B059-2B8B-2B77-32E9AD528063</referredKeyID>
-<mandatory>true</mandatory>
-<refColNames>BookingId</refColNames>
+<mandatory>false</mandatory>
+<refColNames>BookingId,FacilityId,MemberId</refColNames>
 <transferable>true</transferable>
 <rely>false</rely>
 <columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>

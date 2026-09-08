@@ -35,7 +35,6 @@
 <engineerTo>
 <item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -48,7 +47,6 @@
 <engineerTo>
 <item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
@@ -106,18 +104,47 @@
 <logicalDatatype>LOGDT015</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="IsCancelled" id="BD40D5CC-9EEA-0F92-A0FF-83FAB331F3FF">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:23:28 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="CancelledDate" id="5AAF1BCF-EBED-48E8-2FB9-D366BA0AE812">
+<createdBy>Freak</createdBy>
+<createdTime>2026-09-08 19:23:46 UTC</createdTime>
+<ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<engineerTo>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="EC0B47A1-03C1-EF04-13CD-BDE70F0AAB83" name="Member PK">
 <createdBy>Freak</createdBy>
 <createdTime>2026-09-07 18:26:12 UTC</createdTime>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
+<item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
 <attributeRef>B9025884-7396-DEAE-F346-6EB111460ADD</attributeRef>
+<attributeRef>C953CC24-9978-AF06-9B77-90C48359F4E9</attributeRef>
+<attributeRef>ACBF7AB5-CF54-8765-997B-AD002CB167E2</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

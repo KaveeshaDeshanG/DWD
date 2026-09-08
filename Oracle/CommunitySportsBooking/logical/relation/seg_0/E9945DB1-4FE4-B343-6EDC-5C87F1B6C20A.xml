@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Booking and Review" directorySegmentName="seg_0" id="24BBEDA7-3FEC-3D01-C99E-937479B0B7A5">
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Booking and Facility" directorySegmentName="seg_0" id="E9945DB1-4FE4-B343-6EDC-5C87F1B6C20A">
 <createdBy>Freak</createdBy>
-<createdTime>2026-09-07 18:44:06 UTC</createdTime>
+<createdTime>2026-09-08 19:26:15 UTC</createdTime>
 <ownerDesignName>CommunitySportsBooking</ownerDesignName>
 <engineerTo>
 <item key="4381C1BF-45E8-5B2E-42AD-7E4D9A4FF758" value="true"/>
@@ -12,8 +12,8 @@
 <optionalTarget>false</optionalTarget>
 <sourceCardinality>1</sourceCardinality>
 <sourceEntity>D999C26F-497A-970F-B874-393216422195</sourceEntity>
-<targetCardinalityString>1</targetCardinalityString>
-<targetEntity>A265C156-9680-5B53-E802-E9A1D86F1CD5</targetEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>F35B455D-8A27-3E47-5169-B6B680CC9BC3</targetEntity>
 <transferable>true</transferable>
 <deleteRule>NO ACTION</deleteRule>
 </Relation>
